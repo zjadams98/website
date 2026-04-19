@@ -3,7 +3,7 @@ name: Update Legacy Drive Leaderboards
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 12 * * *"   # 12:00 UTC = 6:00 AM Central (CST)
+    - cron: "0 12 * * *"
 
 permissions:
   contents: write
@@ -29,14 +29,14 @@ jobs:
           pip install nfl_data_py pandas
 
       - name: Run legacy drives script
-        run: python legacy_drives.py
+        run: python legacy-drive/legacy_drives.py
 
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add *.html *.json || true
+          git add legacy-drive/*.html legacy-drive/*.json || true
 
           if git diff --staged --quiet; then
             echo "No changes to commit."
