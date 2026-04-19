@@ -1,10 +1,11 @@
 from __future__ import annotations
 import json
-import os
 import warnings
 from collections import Counter
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, List, Sequence, Set, Tuple
+
 import nfl_data_py as nfl
 import pandas as pd
 from pandas.errors import PerformanceWarning
@@ -12,18 +13,24 @@ from pandas.errors import PerformanceWarning
 warnings.simplefilter("ignore", PerformanceWarning)
 warnings.simplefilter("ignore", category=pd.errors.SettingWithCopyWarning)
 
+BASE_DIR = Path(__file__).resolve().parent
+
 CURRENT_SEASON = 2025
-LEGACY_DRIVE_CACHE = "legacy_drives_cache.json"
-QB_NAME_CACHE = "qb_name_cache.json"
+LEGACY_DRIVE_CACHE = BASE_DIR / "legacy_drives_cache.json"
+QB_NAME_CACHE = BASE_DIR / "qb_name_cache.json"
+REG_HTML = BASE_DIR / "regular_season_legacy_drives_leaderboard.html"
+POST_HTML = BASE_DIR / "post_season_legacy_drives_leaderboard.html"
+RECENT_HTML = BASE_DIR / "recent_legacy_drives.html"
 
 Opportunity = Dict[str, Any]
 LegacyDriveData = Dict[str, Any]
 
-def load_legacydrive_cache(legacy_drive_cache: str = LEGACY_DRIVE_CACHE) -> Tuple[List[Opportunity], Set[str], int, List[LegacyDriveData]]:
-    if not os.path.exists(legacy_drive_cache):
+
+def load_legacydrive_cache(legacy_drive_cache: Path = LEGACY_DRIVE_CACHE) -> Tuple[List[Opportunity], Set[str], int, List[LegacyDriveData]]:
+    if not legacy_drive_cache.exists():
         return [], set(), 2000, []
 
-    with open(legacy_drive_cache, "r", encoding="utf-8") as f:
+    with legacy_drive_cache.open("r", encoding="utf-8") as f:
         data = json.load(f) or {}
 
     opportunities = data.get("opportunities", []) or []
@@ -33,12 +40,13 @@ def load_legacydrive_cache(legacy_drive_cache: str = LEGACY_DRIVE_CACHE) -> Tupl
 
     return opportunities, processed_games, last_season_processed, legacydrive_rows
 
+
 def save_legacydrive_cache(
     opportunities: Sequence[Opportunity],
     processed_games: Set[str],
     last_season_processed: int,
     legacydrive_rows: Sequence[LegacyDriveData],
-    legacy_drive_cache: str = LEGACY_DRIVE_CACHE,
+    legacy_drive_cache: Path = LEGACY_DRIVE_CACHE,
 ) -> None:
     payload = {
         "opportunities": list(opportunities),
@@ -47,27 +55,32 @@ def save_legacydrive_cache(
         "legacydrive_rows": list(legacydrive_rows),
         "last_updated": datetime.now().isoformat(),
     }
-    with open(legacy_drive_cache, "w", encoding="utf-8") as f:
+    with legacy_drive_cache.open("w", encoding="utf-8") as f:
         json.dump(payload, f)
 
-def load_persistent_name_map(qb_name_cache: str = QB_NAME_CACHE) -> Dict[str, str]:
-    if not os.path.exists(qb_name_cache):
+
+def load_persistent_name_map(qb_name_cache: Path = QB_NAME_CACHE) -> Dict[str, str]:
+    if not qb_name_cache.exists():
         return {}
-    with open(qb_name_cache, "r", encoding="utf-8") as f:
+    with qb_name_cache.open("r", encoding="utf-8") as f:
         return json.load(f) or {}
 
-def save_persistent_name_map(name_map: Dict[str, str], qb_name_cache: str = QB_NAME_CACHE) -> None:
-    with open(qb_name_cache, "w", encoding="utf-8") as f:
+
+def save_persistent_name_map(name_map: Dict[str, str], qb_name_cache: Path = QB_NAME_CACHE) -> None:
+    with qb_name_cache.open("w", encoding="utf-8") as f:
         json.dump(name_map, f)
+
 
 def seasons_to_load(last_season_processed: int, current_season: int) -> List[int]:
     if last_season_processed < current_season - 1:
         return list(range(last_season_processed, current_season + 1))
     return [current_season]
 
+
 def import_pbp_all(seasons: Sequence[int]) -> pd.DataFrame:
     pbp = nfl.import_pbp_data(list(seasons), downcast=True, cache=False)
     return pbp
+
 
 def build_drive_starts(pbp_period: pd.DataFrame) -> pd.DataFrame:
     return (
@@ -75,6 +88,7 @@ def build_drive_starts(pbp_period: pd.DataFrame) -> pd.DataFrame:
         .groupby(["game_id", "drive"], as_index=False)
         .first()
     )
+
 
 def get_qb_for_drive(
     drive_all: pd.DataFrame,
@@ -85,13 +99,11 @@ def get_qb_for_drive(
     qb_id = None
     qb_name = None
 
-    # Prefer qb_id/qb columns if present.
     if "qb_id" in drive_all.columns:
         qb_series = drive_all["qb_id"].dropna()
         if not qb_series.empty:
             qb_id = qb_series.mode().iloc[0]
             qb_name = qb_name_map.get(qb_id)
-    # Fallback: most common passer_id on pass attempts.
     if qb_id is None and "pass_attempt" in drive_all.columns:
         drive_pass = drive_all[drive_all["pass_attempt"] == 1]
         if not drive_pass.empty and "passer_id" in drive_pass.columns:
@@ -99,15 +111,14 @@ def get_qb_for_drive(
             if qb_counts:
                 qb_id = qb_counts.most_common(1)[0][0]
                 qb_name = passer_name_map.get(qb_id)
-    # Final fallback: team placeholder.
     if qb_id is None:
         qb_id = f"TEAM_{drive_start_row.get('posteam', 'UNK')}"
         qb_name = qb_id
 
     return str(qb_id), str(qb_name) if qb_name is not None else str(qb_id)
 
+
 def get_meaningful_final_play(drive_all: pd.DataFrame) -> pd.Series:
-    # Pick a 'meaningful' final play (skip XP/2PT/timeouts/end-game noise)
     for _, row in drive_all.iterrows():
         desc_txt = str(row.get("desc", "") or "")
         ptype = row.get("play_type")
@@ -121,6 +132,7 @@ def get_meaningful_final_play(drive_all: pd.DataFrame) -> pd.Series:
             return row
     return drive_all.iloc[0]
 
+
 def postseason_week_label(season: int | None, week: int | None) -> str | None:
     if season is None or week is None:
         return None
@@ -132,12 +144,14 @@ def postseason_week_label(season: int | None, week: int | None) -> str | None:
 
     return mapping.get(week)
 
+
 def period_order(p: Any) -> int:
     if p == "Q4":
         return 4
     if p == "OT":
         return 5
     return 99
+
 
 def time_to_seconds(t: Any) -> int:
     if not t or not isinstance(t, str) or ":" not in t:
@@ -147,6 +161,7 @@ def time_to_seconds(t: Any) -> int:
         return int(m) * 60 + int(s)
     except Exception:
         return -1
+
 
 def sort_legacydrive_rows(rows: List[LegacyDriveData]) -> List[LegacyDriveData]:
     return sorted(
@@ -161,6 +176,7 @@ def sort_legacydrive_rows(rows: List[LegacyDriveData]) -> List[LegacyDriveData]:
         ),
     )
 
+
 def build_leaderboard_records(opportunities: Sequence[Opportunity], name_map: Dict[str, str]) -> pd.DataFrame:
     if not opportunities:
         return pd.DataFrame(columns=["qb_name", "wins", "losses", "win_pct"])
@@ -170,7 +186,6 @@ def build_leaderboard_records(opportunities: Sequence[Opportunity], name_map: Di
         df.pivot_table(index="qb_id", columns="result", aggfunc="size", fill_value=0)
         .rename(columns={"W": "wins", "L": "losses"})
     )
-    # Exclude team placeholders.
     records = records[~records.index.astype(str).str.startswith("TEAM_")]
 
     for c in ("wins", "losses"):
@@ -188,6 +203,7 @@ def build_leaderboard_records(opportunities: Sequence[Opportunity], name_map: Di
         ["wins", "losses", "win_pct"], ascending=[False, True, False]
     )
     return records
+
 
 def classify_ot_result(
     *,
@@ -220,6 +236,7 @@ def classify_ot_result(
         return "W", f"OT (drive {ot_rank}): ended leading (Success)"
     return "L", f"OT (drive {ot_rank}): ended not leading (Failure)"
 
+
 def process_new_games(
     pbp: pd.DataFrame,
     new_games: Set[str],
@@ -228,7 +245,6 @@ def process_new_games(
     passer_name_map: Dict[Any, str],
     qb_name_map: Dict[Any, str],
 ) -> None:
-    
     if not new_games:
         return
 
@@ -339,13 +355,11 @@ def process_new_games(
                 end_opp_score=end_opp_score,
             )
 
-        # Legacy rule: skip Q4 opportunities that start with <= 0:30 left and end in failure.
         if period == "Q4":
             start_qsr = row.get("quarter_seconds_remaining")
             if pd.notna(start_qsr) and start_qsr <= 30 and result == "L":
                 continue
 
-        # Cache opportunity WITH season_type so we can build REG and POST leaderboards from one cache.
         opportunities.append({"qb_id": qb_id, "result": result, "season_type": season_type})
         final_row = get_meaningful_final_play(drive_all)
         final_desc = final_row.get("desc")
@@ -380,6 +394,7 @@ def process_new_games(
             }
         )
 
+
 def _render_section(
     *,
     title: str,
@@ -389,8 +404,6 @@ def _render_section(
     records: pd.DataFrame,
     legacydrive_rows: List[LegacyDriveData],
 ) -> str:
-    """Render the single-page leaderboard section (no tabs)."""
-
     html = f"""
       <h1>{title}</h1>
       <div class="subtitle">{subtitle}</div>
@@ -428,6 +441,7 @@ def _render_section(
       </script>
 """
     return html
+
 
 def generate_leaderboards_html(
     *,
@@ -667,13 +681,11 @@ def generate_leaderboards_html(
         const detailsEl = document.getElementById(detailsId);
         if (!detailsEl) return;
 
-        // Toggle
         if (detailsEl.style.display === "block") {
           detailsEl.style.display = "none";
           return;
         }
 
-        // Close others
         hideAllDetails();
         detailsEl.style.display = "block";
 
@@ -777,7 +789,6 @@ def generate_leaderboards_html(
       });
     });
 
-    // Default: show all
     showAll();
   })();
   </script>
@@ -807,6 +818,7 @@ def generate_leaderboards_html(
         rows=post_rows,
     )
     return reg_html, post_html
+
 
 def generate_recent_legacy_drives_html(all_rows: List[LegacyDriveData]) -> str:
     generated_ts = datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -970,6 +982,7 @@ def generate_recent_legacy_drives_html(all_rows: List[LegacyDriveData]) -> str:
 </html>
 """
 
+
 def _normalize_cached_opportunities(opps: List[Opportunity]) -> List[Opportunity]:
     out: List[Opportunity] = []
     for o in opps:
@@ -979,6 +992,7 @@ def _normalize_cached_opportunities(opps: List[Opportunity]) -> List[Opportunity
             o = {**o, "season_type": "REG"}
         out.append(o)
     return out
+
 
 def main() -> None:
     cached_opportunities, processed_games, last_season_processed, cached_rows = load_legacydrive_cache()
@@ -1004,7 +1018,6 @@ def main() -> None:
 
     pbp_new = pbp_all[pbp_all["game_id"].isin(new_games)] if new_games else pd.DataFrame()
 
-    # Name maps for display (merge persistent map with the latest).
     passer_name_map: Dict[Any, str] = pbp_all.groupby("passer_id")["passer"].first().to_dict() if "passer_id" in pbp_all.columns else {}
     qb_name_map: Dict[Any, str] = {}
     if "qb_id" in pbp_all.columns and "qb" in pbp_all.columns:
@@ -1020,7 +1033,6 @@ def main() -> None:
         process_new_games(pbp_new, new_games, opportunities, legacydrive_rows, passer_name_map, qb_name_map)
         processed_games.update(new_games)
 
-        # Preserve your original catch-up logic.
         if seasons[-1] < CURRENT_SEASON:
             last_season_processed = seasons[-1]
         elif len(seasons) > 1:
@@ -1039,7 +1051,6 @@ def main() -> None:
         print("No legacy drive opportunities found.")
         return
 
-    # Split cached content by season type for the two tabs.
     opp_reg = [o for o in opportunities if str(o.get("season_type") or "").upper() == "REG"]
     opp_post = [o for o in opportunities if str(o.get("season_type") or "").upper() == "POST"]
     rows_sorted = sort_legacydrive_rows(legacydrive_rows)
@@ -1050,28 +1061,29 @@ def main() -> None:
     post_records = build_leaderboard_records(opp_post, passer_name_map)
 
     reg_html, post_html = generate_leaderboards_html(
-    reg_records=reg_records,
-    post_records=post_records,
-    reg_rows=rows_reg,
-    post_rows=rows_post,
-)
+        reg_records=reg_records,
+        post_records=post_records,
+        reg_rows=rows_reg,
+        post_rows=rows_post,
+    )
     recent_html = generate_recent_legacy_drives_html(legacydrive_rows)
 
-    with open("regular_season_legacy_drives_leaderboard.html", "w", encoding="utf-8") as f:
+    with REG_HTML.open("w", encoding="utf-8") as f:
         f.write(reg_html)
 
-    with open("post_season_legacy_drives_leaderboard.html", "w", encoding="utf-8") as f:
+    with POST_HTML.open("w", encoding="utf-8") as f:
         f.write(post_html)
 
-    with open("recent_legacy_drives.html", "w", encoding="utf-8") as f:
+    with RECENT_HTML.open("w", encoding="utf-8") as f:
         f.write(recent_html)
 
-    print("\nGenerated regular_season_legacy_drives_leaderboard.html")
-    print("Generated post_season_legacy_drives_leaderboard.html")
-    print("Generated recent_legacy_drives.html")
+    print(f"\nGenerated {REG_HTML.name}")
+    print(f"Generated {POST_HTML.name}")
+    print(f"Generated {RECENT_HTML.name}")
 
     print(f"Total REG QBs: {len(reg_records)}")
     print(f"Total POST QBs: {len(post_records)}")
+
 
 if __name__ == "__main__":
     main()
