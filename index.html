@@ -123,14 +123,75 @@
       background:#fff;
     }
 
+    .news-shell {
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background:#fff;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .news-header {
+      padding: 14px;
+      border-bottom: 1px solid var(--border);
+      background: #f9fafb;
+    }
+
+    .news-header h2 {
+      margin: 0 0 4px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .news-header p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .news-list {
+      max-height: 700px;
+      overflow-y: auto;
+      padding: 10px 14px 14px;
+    }
+
+    .news-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .news-item:last-child {
+      border-bottom: none;
+    }
+
+    .news-item h3 {
+      margin: 0 0 4px;
+      font-size: 16px;
+    }
+
+    .news-meta {
+      margin: 0 0 6px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .news-item p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
     @media (max-width: 520px) {
-  h1 { font-size: 32px; }
+      h1 { font-size: 32px; }
 
+      .frame {
+        height: 600px;
+      }
 
-  .frame {
-    height: 600px;
-  }
-}
+      .news-list {
+        max-height: 520px;
+      }
+    }
 
     footer { padding:14px 20px 22px; color:var(--muted); font-size:12px; }
     a { color: inherit; }
@@ -149,6 +210,9 @@
       </button>
       <button class="tabbtn" role="tab" id="tab-legacy-drives" aria-controls="panel-legacy-drives" aria-selected="false">
         Legacy Drives
+      </button>
+      <button class="tabbtn" role="tab" id="tab-ammonia-news" aria-controls="panel-ammonia-news" aria-selected="false">
+        Ammonia News
       </button>
     </div>
 
@@ -169,7 +233,7 @@
         <button class="subtabbtn" role="tab" id="subtab-LD-recent" aria-controls="subpanel-LD-recent" aria-selected="true">
           Recent
         </button>
-        <button class="subtabbtn" role="tab" id="subtab-LD-regular" aria-controls="subpanel-LD-regular" aria-selected="true">
+        <button class="subtabbtn" role="tab" id="subtab-LD-regular" aria-controls="subpanel-LD-regular" aria-selected="false">
           Regular Season
         </button>
         <button class="subtabbtn" role="tab" id="subtab-LD-post" aria-controls="subpanel-LD-post" aria-selected="false">
@@ -188,13 +252,39 @@
         <iframe class="frame" src="post_season_legacy_drives_leaderboard.html" title="Postseason Leaderboard"></iframe>
       </section>
     </section>
+
+    <!-- AMMONIA NEWS -->
+    <section id="panel-ammonia-news" class="panel" role="tabpanel" aria-labelledby="tab-ammonia-news">
+      <div class="card">
+        <h2>Ammonia News</h2>
+        <p>
+          Latest news int he ammonia world. Refreshed every 30 minutes.
+        </p>
+      </div>
+
+      <div class="news-shell">
+        <div class="news-header">
+          <h2>Latest Ammonia Headlines</h2>
+          <p>Newest items will appear first. This list will later be populated automatically from your script output.</p>
+        </div>
+
+        <div class="news-list" aria-label="Ammonia news list">
+          <article class="news-item">
+            <h3>Placeholder headline</h3>
+            <p class="news-meta">Published: -- | Source: --</p>
+            <p>Your ammonia news items will appear here once the feed is connected.</p>
+          </article>
+        </div>
+      </div>
+    </section>
   </div>
 
   <script>
-    //Main Tabs
+    // Main Tabs
     const mainTabs = [
       { btn: document.getElementById('tab-home'), panel: document.getElementById('panel-home') },
       { btn: document.getElementById('tab-legacy-drives'), panel: document.getElementById('panel-legacy-drives') },
+      { btn: document.getElementById('tab-ammonia-news'), panel: document.getElementById('panel-ammonia-news') },
     ];
 
     // Nested tabs inside Legacy Drives
@@ -214,6 +304,7 @@
 
     mainTabs[0].btn.addEventListener('click', () => activate(mainTabs, 0));
     mainTabs[1].btn.addEventListener('click', () => activate(mainTabs, 1));
+    mainTabs[2].btn.addEventListener('click', () => activate(mainTabs, 2));
     legacyTabs[0].btn.addEventListener('click', () => activate(legacyTabs, 0));
     legacyTabs[1].btn.addEventListener('click', () => activate(legacyTabs, 1));
     legacyTabs[2].btn.addEventListener('click', () => activate(legacyTabs, 2));
@@ -223,11 +314,14 @@
 
       if (h === '#legacy' || h === '#legacy-regular' || h === '#legacy-post') {
         activate(mainTabs, 1);
+      } else if (h === '#ammonia-news') {
+        activate(mainTabs, 2);
       } else {
         activate(mainTabs, 0);
       }
 
-      if (h === '#legacy-post') activate(legacyTabs, 1);
+      if (h === '#legacy-post') activate(legacyTabs, 2);
+      else if (h === '#legacy-regular') activate(legacyTabs, 1);
       else activate(legacyTabs, 0);
     }
 
