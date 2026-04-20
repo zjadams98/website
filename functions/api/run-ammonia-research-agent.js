@@ -4,14 +4,14 @@ export async function onRequestPost(context) {
 
     const {
       instructions,
-      primaryKeywords,
-      excludeKeywords,
-      dateMode,
-      lookbackDays,
-      startDate,
-      endDate,
-      maxCandidates,
-      maxResults
+      keywords,
+      exclude_keywords,
+      date_mode,
+      lookback_days,
+      start_date,
+      end_date,
+      max_candidates,
+      max_results
     } = body;
 
     if (!instructions || typeof instructions !== "string") {
@@ -24,58 +24,58 @@ export async function onRequestPost(context) {
       );
     }
 
-    if (!Array.isArray(primaryKeywords)) {
+    if (!Array.isArray(keywords)) {
       return jsonResponse(
         {
           ok: false,
-          error: "Missing or invalid 'primaryKeywords'."
+          error: "Missing or invalid 'keywords'."
         },
         400
       );
     }
 
-    if (!Array.isArray(excludeKeywords)) {
+    if (!Array.isArray(exclude_keywords)) {
       return jsonResponse(
         {
           ok: false,
-          error: "Missing or invalid 'excludeKeywords'."
+          error: "Missing or invalid 'exclude_keywords'."
         },
         400
       );
     }
 
-    if (!dateMode || !["relative", "custom"].includes(dateMode)) {
+    if (!date_mode || !["relative", "custom"].includes(date_mode)) {
       return jsonResponse(
         {
           ok: false,
-          error: "Missing or invalid 'dateMode'. Must be 'relative' or 'custom'."
+          error: "Missing or invalid 'date_mode'. Must be 'relative' or 'custom'."
         },
         400
       );
     }
 
-    if (dateMode === "relative") {
+    if (date_mode === "relative") {
       if (
-        typeof lookbackDays !== "number" ||
-        !Number.isFinite(lookbackDays) ||
-        lookbackDays < 1
+        typeof lookback_days !== "number" ||
+        !Number.isFinite(lookback_days) ||
+        lookback_days < 1
       ) {
         return jsonResponse(
           {
             ok: false,
-            error: "For relative mode, 'lookbackDays' must be a positive number."
+            error: "For relative mode, 'lookback_days' must be a positive number."
           },
           400
         );
       }
     }
 
-    if (dateMode === "custom") {
-      if (!startDate || !endDate) {
+    if (date_mode === "custom") {
+      if (!start_date || !end_date) {
         return jsonResponse(
           {
             ok: false,
-            error: "For custom mode, 'startDate' and 'endDate' are required."
+            error: "For custom mode, 'start_date' and 'end_date' are required."
           },
           400
         );
@@ -91,26 +91,26 @@ export async function onRequestPost(context) {
       status: "accepted",
       settings: {
         instructions: instructions.trim(),
-        primaryKeywords: primaryKeywords.map(cleanString).filter(Boolean),
-        excludeKeywords: excludeKeywords.map(cleanString).filter(Boolean),
-        dateMode,
-        lookbackDays: dateMode === "relative" ? lookbackDays : null,
-        startDate: dateMode === "custom" ? startDate : null,
-        endDate: dateMode === "custom" ? endDate : null,
-        maxCandidates:
-          typeof maxCandidates === "number" && maxCandidates > 0
-            ? maxCandidates
+        keywords: keywords.map(cleanString).filter(Boolean),
+        exclude_keywords: exclude_keywords.map(cleanString).filter(Boolean),
+        date_mode,
+        lookback_days: date_mode === "relative" ? lookback_days : null,
+        start_date: date_mode === "custom" ? start_date : null,
+        end_date: date_mode === "custom" ? end_date : null,
+        max_candidates:
+          typeof max_candidates === "number" && max_candidates > 0
+            ? max_candidates
             : 250,
-        maxResults:
-          typeof maxResults === "number" && maxResults > 0
-            ? maxResults
+        max_results:
+          typeof max_results === "number" && max_results > 0
+            ? max_results
             : 20
       }
     };
 
     return jsonResponse({
       ok: true,
-      message: "Ammonia agent run accepted.",
+      message: "Ammonia research agent run accepted.",
       runId,
       run: normalizedPayload
     });
