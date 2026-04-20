@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ammonia News</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 180px);
+      color: var(--text);
+    }
+
+    .page {
+      max-width: 1050px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 55%, #60a5fa 100%);
+      color: white;
+      border-radius: 24px;
+      padding: 26px 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.85;
+      margin-bottom: 10px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.05;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 760px;
+      line-height: 1.55;
+      font-size: 15px;
+      opacity: 0.95;
+    }
+
+    .status-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 18px 0 20px;
+    }
+
+    .status-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 16px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    .status-label {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+    }
+
+    .status-value {
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin: 0 0 18px;
+    }
+
+    .toolbar-left h2 {
+      margin: 0 0 4px;
+      font-size: 20px;
+    }
+
+    .toolbar-left p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 10px 14px;
+      min-width: min(100%, 360px);
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    .search-box input {
+      border: 0;
+      outline: 0;
+      width: 100%;
+      font-size: 14px;
+      background: transparent;
+      color: var(--text);
+    }
+
+    .featured-wrap {
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin: 0 0 12px;
+    }
+
+    .news-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .news-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 18px 16px;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+
+    .news-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+      border-color: #c7d2fe;
+    }
+
+    .featured-card {
+      padding: 22px 22px 20px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border-color: #bfdbfe;
+    }
+
+    .card-topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .new-badge {
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 999px;
+    }
+
+    .headline {
+      display: inline-block;
+      color: var(--text);
+      font-size: 22px;
+      line-height: 1.25;
+      font-weight: 800;
+      text-decoration: none;
+      margin-bottom: 10px;
+    }
+
+    .headline:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .summary {
+      margin: 0 0 14px;
+      color: #334155;
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #dbeafe;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .read-more {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .read-more:hover {
+      text-decoration: underline;
+    }
+
+    .empty-state {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 22px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .empty-state h2 {
+      margin: 0 0 8px;
+      color: var(--text);
+      font-size: 22px;
+    }
+
+    .news-card.hidden {
+      display: none;
+    }
+
+    @media (max-width: 680px) {
+      body { padding: 14px; }
+      .hero { padding: 22px 18px; border-radius: 20px; }
+      .headline { font-size: 19px; }
+      .summary { font-size: 14px; }
+      .card-footer { align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="eyebrow">Ammonia intelligence feed</div>
+      <h1>Ammonia News</h1>
+      <p>
+        A live-style feed of recent ammonia-related reporting across projects, shipping, policy, power, and market developments.
+        Headlines are sorted newest first and limited to the past 30 days.
+      </p>
+    </section>
+
+    <section class="status-bar">
+      <div class="status-card">
+        <div class="status-label">Last updated</div>
+        <div class="status-value">2026-04-20 00:30 UTC</div>
+      </div>
+      <div class="status-card">
+        <div class="status-label">Articles shown</div>
+        <div class="status-value">60</div>
+      </div>
+      <div class="status-card">
+        <div class="status-label">Published in last 24h</div>
+        <div class="status-value">10</div>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <div class="toolbar-left">
+        <h2>Recent coverage</h2>
+        <p>Search headlines or summaries and click any story to open the original article.</p>
+      </div>
+      <label class="search-box" aria-label="Search ammonia news">
+        <span>🔎</span>
+        <input id="newsSearch" type="text" placeholder="Search ammonia stories..." />
+      </label>
+    </section>
+
+    <section class="featured-wrap">
+      <h2 class="section-title">Featured story</h2>
+      <div class="news-grid">
+        
+    <article class="news-card featured-card">
+      <div class="card-topline">
+        <div class="meta">dailyasianage.com • 2026-04-19 18:03 UTC</div>
+        <span class="new-badge">New</span>
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMijwFBVV95cUxPdFQ2NlFmWjNYOWluSUdyazA2TkdBa3loTUNCeGx2N1pwdGMtVUhFdE1vUEZXSjdJelRfOVlhVXduMk5rV0c3UXFpSkMzTEFCQkF0MTZDNGdvNnMxWWxiLUo2cE0taFplbHFjNG9YSVRqS1BlakVFT0h3cEVrWVFLSjdVa0hEOU9nOUxsc1lGbw?oc=5" target="_blank" rel="noopener noreferrer">Country&#x27;s only DAP fertilizer factory closes down - dailyasianage.com</a>
+      <p class="summary">Country&#x27;s only DAP fertilizer factory closes down dailyasianage.com</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Production</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMijwFBVV95cUxPdFQ2NlFmWjNYOWluSUdyazA2TkdBa3loTUNCeGx2N1pwdGMtVUhFdE1vUEZXSjdJelRfOVlhVXduMk5rV0c3UXFpSkMzTEFCQkF0MTZDNGdvNnMxWWxiLUo2cE0taFplbHFjNG9YSVRqS1BlakVFT0h3cEVrWVFLSjdVa0hEOU9nOUxsc1lGbw?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">News feed</h2>
+      <div id="newsFeed" class="news-grid">
+        
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Dhaka Tribune • 2026-04-19 16:15 UTC</div>
+        <span class="new-badge">New</span>
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMinAFBVV95cUxOYXp5VnA3RFJhTkpqVno4LUpnaHVGUHB2d0dWQXJza0Q2Mkdoenl3eFRRVWYyanhDM3IwT2pQay13YjBkVXpyWGdtSXJMa3B2TXhzMHJMTmkxOHpPRDN4bG80bUhydmlDMGs1WTZOb29mSTZucmpIYnVicFo1SGVfc0wxdFhkZXRUZkJSaDRfd0FSamdPQWpiaDNHQVHSAaIBQVVfeXFMT3hMTFkweHNJM1gxMEI5MzVGak5obHhYdUthOXpyLVUwajdpQ2RUa1ZTSEQ1TUZSbEFjLXZlcDczM08wZmdqNldpTTdNdkhKSHg2d2VZa2hkelhjRll2eEl6SlI4Z1ZDYS16X2EwZFhPenVHMkVfRGlhVEJqMXAzUXNQdjM1NzItZTBqMlIwTW9xNm1aV2FYa0FyTXF5WVhBbHBn?oc=5" target="_blank" rel="noopener noreferrer">Fertilizer factory shuts down amid ammonia shortage in Ctg - Dhaka Tribune</a>
+      <p class="summary">Fertilizer factory shuts down amid ammonia shortage in Ctg Dhaka Tribune</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Production</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMinAFBVV95cUxOYXp5VnA3RFJhTkpqVno4LUpnaHVGUHB2d0dWQXJza0Q2Mkdoenl3eFRRVWYyanhDM3IwT2pQay13YjBkVXpyWGdtSXJMa3B2TXhzMHJMTmkxOHpPRDN4bG80bUhydmlDMGs1WTZOb29mSTZucmpIYnVicFo1SGVfc0wxdFhkZXRUZkJSaDRfd0FSamdPQWpiaDNHQVHSAaIBQVVfeXFMT3hMTFkweHNJM1gxMEI5MzVGak5obHhYdUthOXpyLVUwajdpQ2RUa1ZTSEQ1TUZSbEFjLXZlcDczM08wZmdqNldpTTdNdkhKSHg2d2VZa2hkelhjRll2eEl6SlI4Z1ZDYS16X2EwZFhPenVHMkVfRGlhVEJqMXAzUXNQdjM1NzItZTBqMlIwTW9xNm1aV2FYa0FyTXF5WVhBbHBn?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Just News BD • 2026-04-19 12:49 UTC</div>
+        <span class="new-badge">New</span>
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMiYEFVX3lxTFBaTWRQRFU3bmdfU2Jfa3laMTJhLXA4d09qbTZRZ2h6UTI2Vy1wRlViWHhvbndnVDZSd001TUlzQlMzVnBVVDhMUnFVRXZueWtrZXYyOEY5cjYxamxaaXR3LQ?oc=5" target="_blank" rel="noopener noreferrer">Ammonia crunch halts production at country’s lone DAP fertiliser plant - Just News BD</a>
+      <p class="summary">Ammonia crunch halts production at country’s lone DAP fertiliser plant Just News BD</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Projects</span><span class="tag">Production</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMiYEFVX3lxTFBaTWRQRFU3bmdfU2Jfa3laMTJhLXA4d09qbTZRZ2h6UTI2Vy1wRlViWHhvbndnVDZSd001TUlzQlMzVnBVVDhMUnFVRXZueWtrZXYyOEY5cjYxamxaaXR3LQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">portalcantagalo.com.br • 2026-04-19 12:15 UTC</div>
+        <span class="new-badge">New</span>
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMie0FVX3lxTE4zNEgxdDFJaGtXanRIT2VWcTg0b29lVTFOVzZvRWhlVVFGWGlXU3ZzY2lIZkZTdmVTR20xMnh2WThDcDR3b240ZkllbG96M3ZfeG0tMDVfZllqTGFrSkJyN05Tc2JFTkgtcVBmM0VQQ3VQa3VONi11MmhlRQ?oc=5" target="_blank" rel="noopener noreferrer">Travel Medicine Packets Jual Ammonia Inhalant 10 Ampul Per Box - Kab. Tangerang Ammonia Inhalants - portalcantagalo.com.br</a>
+      <p class="summary">Travel Medicine Packets Jual Ammonia Inhalant 10 Ampul Per Box - Kab. Tangerang Ammonia Inhalants portalcantagalo.com.br</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Shipping</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMie0FVX3lxTE4zNEgxdDFJaGtXanRIT2VWcTg0b29lVTFOVzZvRWhlVVFGWGlXU3ZzY2lIZkZTdmVTR20xMnh2WThDcDR3b240ZkllbG96M3ZfeG0tMDVfZllqTGFrSkJyN05Tc2JFTkgtcVBmM0VQQ3VQa3VONi11MmhlRQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">The Daily Star • 2026-04-19 10:25 UTC</div>
+        <span class="new-badge">New</span>
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMiqAFBVV95cUxNRFM4ZDZma21vcFRobVhFTnROQlFkLTNGRXI0Y1R4aGJFRUtGRlpLbG52enVhX0pVOXM5MlBvWDg5SkNaak5XZl9LY0FuZkdfYU9OWl83R08tV3BzV1Ffa3hrR1BSbjRHLWdBZUNGNTRSTE5lOEVsUks5WC1zclVXUXJRUk9ycGNTMFIxdUxaYVBKNGxaX3hlWUhCRkdOdFlLenNZM0tjYUQ?oc=5" target="_blank" rel="noopener noreferrer">Ammonia shortage halts Chattogram DAP plant operations - The Daily Star</a>
+      <p class="summary">Ammonia shortage halts Chattogram DAP plant operations The Daily Star</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Projects</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMiqAFBVV95cUxNRFM4ZDZma21vcFRobVhFTnROQlFkLTNGRXI0Y1R4aGJFRUtGRlpLbG52enVhX0pVOXM5MlBvWDg5SkNaak5XZl9LY0FuZkdfYU9OWl83R08tV3BzV1Ffa3hrR1BSbjRHLWdBZUNGNTRSTE5lOEVsUks5WC1zclVXUXJRUk9ycGNTMFIxdUxaYVBKNGxaX3hlWUhCRkdOdFlLenNZM0tjYUQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">thereport • 2026-04-19 09:03 UTC</div>
+        <span class="new-badge">New</span>
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMirAFBVV95cUxPRGgtcEhaR1lGZV9KT0RMeEktX011bmJrSUxDUXFXaS10Y1U2ejd1S04tZVZ4ekx4ZGRmWm5FZ3pBSTJjZ29MMTZOZG43WVBfd25OcXZEMjByNEJReFcxZjBJYnpfcExUdWdBQmRFQ2FTdTdwT2pRbnhBYXg1NW9sYXVMUU5fb0xkNGFFX1FlT2tKeHNwWVVna191MG1SdW8yQjRCWlFpNWlMaFFI?oc=5" target="_blank" rel="noopener noreferrer">DAP fertiliser production halted in Chattogram over ammonia shortage - thereport</a>
+      <p class="summary">DAP fertiliser production halted in Chattogram over ammonia shortage thereport</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Shipping</span><span class="tag">Production</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMirAFBVV95cUxPRGgtcEhaR1lGZV9KT0RMeEktX011bmJrSUxDUXFXaS10Y1U2ejd1S04tZVZ4ekx4ZGRmWm5FZ3pBSTJjZ29MMTZOZG43WVBfd25OcXZEMjByNEJReFcxZjBJYnpfcExUdWdBQmRFQ2FTdTdwT2pRbnhBYXg1NW9sYXVMUU5fb0xkNGFFX1FlT2tKeHNwWVVna191MG1SdW8yQjRCWlFpNWlMaFFI?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Prothom Alo English • 2026-04-19 08:53 UTC</div>
+        <span class="new-badge">New</span>
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMiakFVX3lxTFA0eDFRaWpVdERUdG9NUHhwcllULW5nOUxXakxrSm1OWHBHT0wzMG1sX19PZlhOeGRSVXhlQjV2R0pVWGxjaTY4WVVQa0gxVG1JeTJkNGx4M2k1Y1RISzgyakdwOEdYSjRydnfSAXdBVV95cUxPelRhWk1wZmdtMnYzSk1vQUQ3UTRkbmtpZW9nWUVtT29hLXFYY1BpaUNQWk5vVjdpTmtJaHZoTjB3RFR0bHB0Qm1CYk9DYWlpM0VWN3BPMFdCWmNCenl1ZFlMWS0zQjBnVGlaS2xKWkJuYmVucnk5Zw?oc=5" target="_blank" rel="noopener noreferrer">DAP fertiliser plant shuts down due to ammonia shortage amid gas crisis - Prothom Alo English</a>
+      <p class="summary">DAP fertiliser plant shuts down due to ammonia shortage amid gas crisis Prothom Alo English</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Projects</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMiakFVX3lxTFA0eDFRaWpVdERUdG9NUHhwcllULW5nOUxXakxrSm1OWHBHT0wzMG1sX19PZlhOeGRSVXhlQjV2R0pVWGxjaTY4WVVQa0gxVG1JeTJkNGx4M2k1Y1RISzgyakdwOEdYSjRydnfSAXdBVV95cUxPelRhWk1wZmdtMnYzSk1vQUQ3UTRkbmtpZW9nWUVtT29hLXFYY1BpaUNQWk5vVjdpTmtJaHZoTjB3RFR0bHB0Qm1CYk9DYWlpM0VWN3BPMFdCWmNCenl1ZFlMWS0zQjBnVGlaS2xKWkJuYmVucnk5Zw?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">bdnews24.com • 2026-04-19 08:50 UTC</div>
+        <span class="new-badge">New</span>
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMiV0FVX3lxTE5qeF8yYUxoRE53SkU3d0JpZFNBN000QXdWRXR0NGVSYUhYWDRickwxa051Y3d0UzJFbXVmdHh0Um8xV1ZzYlV6M1RvWjZ3YTBQLXdzMjFoQQ?oc=5" target="_blank" rel="noopener noreferrer">DAP fertiliser factory shut down amid ammonia shortage - bdnews24.com</a>
+      <p class="summary">DAP fertiliser factory shut down amid ammonia shortage bdnews24.com</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">General</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMiV0FVX3lxTE5qeF8yYUxoRE53SkU3d0JpZFNBN000QXdWRXR0NGVSYUhYWDRickwxa051Y3d0UzJFbXVmdHh0Um8xV1ZzYlV6M1RvWjZ3YTBQLXdzMjFoQQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Daily Observer • 2026-04-19 06:38 UTC</div>
+        <span class="new-badge">New</span>
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMiT0FVX3lxTE16aXdIN0xhVFRZcjFCZVg3WXVBcmFmLU5pamZxcVdHSDVDdUZ1VVlRZUpDX3pmNXI2aWpFUEd4bDNDMlNvRXhzSEFDUkczbDA?oc=5" target="_blank" rel="noopener noreferrer">Production halted at DAP fertilizer plant in Ctg - Daily Observer</a>
+      <p class="summary">Production halted at DAP fertilizer plant in Ctg Daily Observer</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Projects</span><span class="tag">Production</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMiT0FVX3lxTE16aXdIN0xhVFRZcjFCZVg3WXVBcmFmLU5pamZxcVdHSDVDdUZ1VVlRZUpDX3pmNXI2aWpFUEd4bDNDMlNvRXhzSEFDUkczbDA?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Views Bangladesh • 2026-04-19 05:29 UTC</div>
+        <span class="new-badge">New</span>
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMinwFBVV95cUxQd3gteFhLaHB0ek4tdGg5MldYRm5uVF91aTJqNUl0dFVMYzlkSFpTdmxhWURjb01iSHYwcnN6REZfdUdrYmxHMXpIcFlkUkhNTmVHS0NWNUE3Y1NFTXlVMVh3R000V183eEZPQ2FDVXZGdll4RmdVNVdNb1JKQkRtaEIwQ2dXSzh1cS01Z2w0S2s3bXhfNWxjVXdkRnBHcG8?oc=5" target="_blank" rel="noopener noreferrer">Ammonia shortage shuts down production at DAP fertilizer plant in Ctg - Views Bangladesh</a>
+      <p class="summary">Ammonia shortage shuts down production at DAP fertilizer plant in Ctg Views Bangladesh</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Projects</span><span class="tag">Production</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMinwFBVV95cUxQd3gteFhLaHB0ek4tdGg5MldYRm5uVF91aTJqNUl0dFVMYzlkSFpTdmxhWURjb01iSHYwcnN6REZfdUdrYmxHMXpIcFlkUkhNTmVHS0NWNUE3Y1NFTXlVMVh3R000V183eEZPQ2FDVXZGdll4RmdVNVdNb1JKQkRtaEIwQ2dXSzh1cS01Z2w0S2s3bXhfNWxjVXdkRnBHcG8?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Agroinformacion • 2026-04-18 15:46 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMi9wFBVV95cUxQR2YyQXdLRVFkUWRhTldyS3pzZURFUW9hMk5uQmluVXlXV0hmbW9sTGhkeTBhdUF0NVhoVmxVTzVKRVE5OFlxd0NVLW1uR2FSUFY1WEVRVmxSRmR4MDFpRUJLaFRZaHZMZ2pKdlphcjgtMHE5Y2hrWGJXTU1ZblJfd282akhSQ01Ic1pubzNKcFJ5eW1McWVwNU1BbmhTQW1qNmVkMmRvaWpKaGt1Q3B4VXlwekstcVpxMUFJTEJjVmVUQzJXOVdtVzFvMHBISVlCWVkzU2ZON05DNFlkaTQ2RFpkQTQ3d09xcUdwb042dEhiMVFFYmdn?oc=5" target="_blank" rel="noopener noreferrer">Fertilizer prices 2027 worry corn growers more than 2026 as NCGA survey finds only 60 percent have nitrogen secured - Agroinformacion</a>
+      <p class="summary">Fertilizer prices 2027 worry corn growers more than 2026 as NCGA survey finds only 60 percent have nitrogen secured Agroinformacion</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Production</span><span class="tag">Markets</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMi9wFBVV95cUxQR2YyQXdLRVFkUWRhTldyS3pzZURFUW9hMk5uQmluVXlXV0hmbW9sTGhkeTBhdUF0NVhoVmxVTzVKRVE5OFlxd0NVLW1uR2FSUFY1WEVRVmxSRmR4MDFpRUJLaFRZaHZMZ2pKdlphcjgtMHE5Y2hrWGJXTU1ZblJfd282akhSQ01Ic1pubzNKcFJ5eW1McWVwNU1BbmhTQW1qNmVkMmRvaWpKaGt1Q3B4VXlwekstcVpxMUFJTEJjVmVUQzJXOVdtVzFvMHBISVlCWVkzU2ZON05DNFlkaTQ2RFpkQTQ3d09xcUdwb042dEhiMVFFYmdn?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Container News • 2026-04-18 13:30 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMilgFBVV95cUxPd19IZnRfUjBLZGR1SXR0RmFtNzYybWdtQXVzb1pLNXBWRDhJcnA0UDlDMFh0aHozaUU2ZExkUUd1ckJ4RTZ3MVRjdUhud3ZnNVlEX0h0UmFuN2syOURKX2ZSZ00zd2ZTOEs5ck5KTkFTM2VLbU44eVpTUDVTUlp2dnU1ZEVPcHNFQklzNl9pelFtS1JWZ0E?oc=5" target="_blank" rel="noopener noreferrer">MB Energy secures permit for ammonia import terminal in Hamburg - Container News</a>
+      <p class="summary">MB Energy secures permit for ammonia import terminal in Hamburg Container News</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Shipping</span><span class="tag">Projects</span><span class="tag">Markets</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMilgFBVV95cUxPd19IZnRfUjBLZGR1SXR0RmFtNzYybWdtQXVzb1pLNXBWRDhJcnA0UDlDMFh0aHozaUU2ZExkUUd1ckJ4RTZ3MVRjdUhud3ZnNVlEX0h0UmFuN2syOURKX2ZSZ00zd2ZTOEs5ck5KTkFTM2VLbU44eVpTUDVTUlp2dnU1ZEVPcHNFQklzNl9pelFtS1JWZ0E?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">IndexBox • 2026-04-18 10:30 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMirgFBVV95cUxOdHBTSEFYamxGSHRTNVp1MmtWeWxORGpmOFZXcUJUU0R1M1RseHZHLWJsYVhJRWFxRndpUWpRZzBoVi1zeFlEZW1wNXJnMmlrWkplMFEtcWxBV2M5NHM5c2x2SEZmdEx1ajJTY3RMbDBFMHQ1WjFZbVNnTjB4VG1MNE5GYjhBcGZiNW4wRXZ0LXFLZUhaU1kwNEhrejMwVE9FUWlNOC10eS1OSXEwV0E?oc=5" target="_blank" rel="noopener noreferrer">Hamburg Approves Ammonia Terminal as Rheinmetall Advances Hydrogen Fuel Network - IndexBox</a>
+      <p class="summary">Hamburg Approves Ammonia Terminal as Rheinmetall Advances Hydrogen Fuel Network IndexBox</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Projects</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMirgFBVV95cUxOdHBTSEFYamxGSHRTNVp1MmtWeWxORGpmOFZXcUJUU0R1M1RseHZHLWJsYVhJRWFxRndpUWpRZzBoVi1zeFlEZW1wNXJnMmlrWkplMFEtcWxBV2M5NHM5c2x2SEZmdEx1ajJTY3RMbDBFMHQ1WjFZbVNnTjB4VG1MNE5GYjhBcGZiNW4wRXZ0LXFLZUhaU1kwNEhrejMwVE9FUWlNOC10eS1OSXEwV0E?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Quantum Commodity Intelligence • 2026-04-17 16:23 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPbWJPSzJZWnE1ZXBqZldCUF8yd09VRmxpZTl6Zlo3MWVvZ3NqWWZnR1gyTUlOSnMyTktibVZDWXFSdnYwTzhLeU9sMmk0T3hncXFUbmt3TmNpaS1YcUxDUmJKekx3YTZoNzI5Z2NVdEllRlpGSXM0S0NWSWxqUS1jS1ZBVWo0cXBtZlNfekR4TXhsWWo5dnpCT2cwM2dSVU5HdEdyZXln?oc=5" target="_blank" rel="noopener noreferrer">Optimism brews as ammonia traders eye Hormuz opening - Quantum Commodity Intelligence</a>
+      <p class="summary">Optimism brews as ammonia traders eye Hormuz opening Quantum Commodity Intelligence</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Markets</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMipgFBVV95cUxPbWJPSzJZWnE1ZXBqZldCUF8yd09VRmxpZTl6Zlo3MWVvZ3NqWWZnR1gyTUlOSnMyTktibVZDWXFSdnYwTzhLeU9sMmk0T3hncXFUbmt3TmNpaS1YcUxDUmJKekx3YTZoNzI5Z2NVdEllRlpGSXM0S0NWSWxqUS1jS1ZBVWo0cXBtZlNfekR4TXhsWWo5dnpCT2cwM2dSVU5HdEdyZXln?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Hydrogen Insight • 2026-04-17 14:18 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMiyAFBVV95cUxNRzR2YkxSZXdwQmY0OFZWd2xtYXFiWWZrY0pSZ212UXZsWWdPOUZLQkpsZExxaE8wNXpGYWRuU3Y5T3U3NVg0TWdic0hWelRrSTkzVlJKbVJkb0syV1o1U1h0QXBmU2RFMjJEcXVLZ1c4cndscWp6Tk9BMXg1eW9DUFl1N3ZCQ3BhR25FeGwwclg3N0VvU1FQX21LQXdzdFRwa1dKRHBZMDBkM3Z2MjlGeEN6bmhCeWFPdjNuT3Bub3VlSG9TSmpURA?oc=5" target="_blank" rel="noopener noreferrer">Green ammonia unlikely to be ‘bottleneck’ to pioneering new dual-fuel vessels - Hydrogen Insight</a>
+      <p class="summary">Green ammonia unlikely to be ‘bottleneck’ to pioneering new dual-fuel vessels Hydrogen Insight</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Shipping</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMiyAFBVV95cUxNRzR2YkxSZXdwQmY0OFZWd2xtYXFiWWZrY0pSZ212UXZsWWdPOUZLQkpsZExxaE8wNXpGYWRuU3Y5T3U3NVg0TWdic0hWelRrSTkzVlJKbVJkb0syV1o1U1h0QXBmU2RFMjJEcXVLZ1c4cndscWp6Tk9BMXg1eW9DUFl1N3ZCQ3BhR25FeGwwclg3N0VvU1FQX21LQXdzdFRwa1dKRHBZMDBkM3Z2MjlGeEN6bmhCeWFPdjNuT3Bub3VlSG9TSmpURA?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Motorship • 2026-04-17 12:03 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMivgFBVV95cUxNX1BlNFFmSkgzTjRWODFoY294XzBKZVU1cFhTQi1iQWRMMFNaRGszZW40dHJOeHN5TVhzXy1iQlg2MEFZYXN5QTcwZ2lld1YzZmdIVm85MzFpbmJXM2RXNC1jVDkteUFhM3M0T2FTNVV0dWY5YXFmTnRFcDV3X3FmTERHNnJ6U0R1MThTVi1oNEJJMlNTOWVWRDhnS1E1NkNHanJEMVhDdzhIaU5JSXZ3bmwyQU4tbDlIUEUtUElB?oc=5" target="_blank" rel="noopener noreferrer">Wärtsilä boosts ammonia engine power - Motorship</a>
+      <p class="summary">Wärtsilä boosts ammonia engine power Motorship</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Shipping</span><span class="tag">Power</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMivgFBVV95cUxNX1BlNFFmSkgzTjRWODFoY294XzBKZVU1cFhTQi1iQWRMMFNaRGszZW40dHJOeHN5TVhzXy1iQlg2MEFZYXN5QTcwZ2lld1YzZmdIVm85MzFpbmJXM2RXNC1jVDkteUFhM3M0T2FTNVV0dWY5YXFmTnRFcDV3X3FmTERHNnJ6U0R1MThTVi1oNEJJMlNTOWVWRDhnS1E1NkNHanJEMVhDdzhIaU5JSXZ3bmwyQU4tbDlIUEUtUElB?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">The Hereford Times • 2026-04-17 11:05 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMipwFBVV95cUxNTmx0WHQyZ21SQi0wYnpJeGJjaEc3WkhiSVZFalhRMFZfZkYzM1NWRlFtd0t4RGNFSVFnaXVhaktFMS1Rb3B3amZEdG5UalBhWXlrYWFYSlI1Ukk5Y0NQX081MTBodXB0dlo5Qlo5YmhzMmxUcFhXci1LMXd5bHNvWE0tS05ISUZfUmtHMmoybEpFeXp4LUtNV0NTWVByUzh4WlhFSk5FWQ?oc=5" target="_blank" rel="noopener noreferrer">New data maps Herefordshire as an ammonia pollution hotspot from factory farms - The Hereford Times</a>
+      <p class="summary">New data maps Herefordshire as an ammonia pollution hotspot from factory farms The Hereford Times</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">General</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMipwFBVV95cUxNTmx0WHQyZ21SQi0wYnpJeGJjaEc3WkhiSVZFalhRMFZfZkYzM1NWRlFtd0t4RGNFSVFnaXVhaktFMS1Rb3B3amZEdG5UalBhWXlrYWFYSlI1Ukk5Y0NQX081MTBodXB0dlo5Qlo5YmhzMmxUcFhXci1LMXd5bHNvWE0tS05ISUZfUmtHMmoybEpFeXp4LUtNV0NTWVByUzh4WlhFSk5FWQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">AirQualityNews • 2026-04-17 10:18 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMiogFBVV95cUxOeDhrRHo1QmZwcC12dnNUVW5IcFpYZ29TN0wxSlVsMUlNcmdxV3dmYUh4bk0wM2pLUDVHcllEUXUtUnVacnhISnVBRXlHaFVYbzQtbVFYSXAzeVFfUzAySVZlMWxZSjVDRGE5UjJ2NFNZcGFFZlgtZHVmODdiRkc4Tm56a2ZoOHVvNF9ZcjFFX1FjMzQwV2xqUl9aTlhYU3VlU3c?oc=5" target="_blank" rel="noopener noreferrer">Interactive map reveals ammonia hotspots from factory farms - AirQualityNews</a>
+      <p class="summary">Interactive map reveals ammonia hotspots from factory farms AirQualityNews</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">General</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMiogFBVV95cUxOeDhrRHo1QmZwcC12dnNUVW5IcFpYZ29TN0wxSlVsMUlNcmdxV3dmYUh4bk0wM2pLUDVHcllEUXUtUnVacnhISnVBRXlHaFVYbzQtbVFYSXAzeVFfUzAySVZlMWxZSjVDRGE5UjJ2NFNZcGFFZlgtZHVmODdiRkc4Tm56a2ZoOHVvNF9ZcjFFX1FjMzQwV2xqUl9aTlhYU3VlU3c?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">FarmingUK • 2026-04-17 09:18 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMimwFBVV95cUxNZTJoT1Z1NkxGelE4TXc0VDB3eC1oM1paSkdqTXRVd0JhZDFqcnA3ek95cDJOMEJlUWNxWWc2bUMzZ05JVmxMcE5kazczOGw2clhxQVpGbXFZajhRb0lMR2I5N0ZkYy1TWkctdXV1TGVIQVgwdndDM19XUUJoWndLNWU1V2hIcXM1TVh3aDAzSlNNaXZsUll1QjVQYw?oc=5" target="_blank" rel="noopener noreferrer">Pig sector hits back at &#x27;misleading&#x27; ammonia map claims - FarmingUK</a>
+      <p class="summary">Pig sector hits back at &#x27;misleading&#x27; ammonia map claims FarmingUK</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">General</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMimwFBVV95cUxNZTJoT1Z1NkxGelE4TXc0VDB3eC1oM1paSkdqTXRVd0JhZDFqcnA3ek95cDJOMEJlUWNxWWc2bUMzZ05JVmxMcE5kazczOGw2clhxQVpGbXFZajhRb0lMR2I5N0ZkYy1TWkctdXV1TGVIQVgwdndDM19XUUJoWndLNWU1V2hIcXM1TVh3aDAzSlNNaXZsUll1QjVQYw?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Ship &amp; Bunker • 2026-04-17 08:59 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMirAFBVV95cUxOdU1VbXRhT1JOMnk0X21aQUJPbEFRVi1scFI1MjR0UjBQQ1VjUThMdWQxZ1NHNkVxR0dUQlRvd3oyWXo3X3JhU0IwZEZhUnZhTG1paFhOenJ4VXRQdkptWU9oT3d2MGRRMmJkZE82dEROU2d6N0ZFX1ZsMElIM2NVUGxtaHdDWXN3dkdOcGVaQnJXbU52SGJYdHREM3lYeDdRSElyRFVvZ1lOb21x?oc=5" target="_blank" rel="noopener noreferrer">Wärtsilä Upgrades Power Rating for Ammonia-Fuelled Engine Design - Ship &amp; Bunker</a>
+      <p class="summary">Wärtsilä Upgrades Power Rating for Ammonia-Fuelled Engine Design Ship &amp; Bunker</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Shipping</span><span class="tag">Power</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMirAFBVV95cUxOdU1VbXRhT1JOMnk0X21aQUJPbEFRVi1scFI1MjR0UjBQQ1VjUThMdWQxZ1NHNkVxR0dUQlRvd3oyWXo3X3JhU0IwZEZhUnZhTG1paFhOenJ4VXRQdkptWU9oT3d2MGRRMmJkZE82dEROU2d6N0ZFX1ZsMElIM2NVUGxtaHdDWXN3dkdOcGVaQnJXbU52SGJYdHREM3lYeDdRSElyRFVvZ1lOb21x?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Manifold Times • 2026-04-17 06:04 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMioAFBVV95cUxQNkl4dDJjOVFJWHc4RGE5cFpQcy1VNFVFUjlMWVY5V2ZOOHVXNnBCdk1wZkNEdWprNnVXbndLWFdxYTNuWlZ4UnhINnE1WnFYZG53Nk8yQmxfbDYzZjlsYlpqWEd6Q01CeWJMNFBfdlUtanFubEtNSVA5VDJQaEo3VmhObWdHZjNfeXZmVVB3alBrXy1aOXpLUXoyUGVCRkcw?oc=5" target="_blank" rel="noopener noreferrer">Wärtsilä raises ammonia engine output to match LNG-fuelled 25DF - Manifold Times</a>
+      <p class="summary">Wärtsilä raises ammonia engine output to match LNG-fuelled 25DF Manifold Times</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">General</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMioAFBVV95cUxQNkl4dDJjOVFJWHc4RGE5cFpQcy1VNFVFUjlMWVY5V2ZOOHVXNnBCdk1wZkNEdWprNnVXbndLWFdxYTNuWlZ4UnhINnE1WnFYZG53Nk8yQmxfbDYzZjlsYlpqWEd6Q01CeWJMNFBfdlUtanFubEtNSVA5VDJQaEo3VmhObWdHZjNfeXZmVVB3alBrXy1aOXpLUXoyUGVCRkcw?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Tradewinds News • 2026-04-16 19:03 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMivwFBVV95cUxNZm4tMVNMRUNJelE5VlR2cnFqUzdhenZ1dmowR1RYSzZCaUgtUWxua3hkSk54Q2xubEYwbmYyNENYdXRBdGRyWklJUEtFTjh4UkJxNzBJdk95Rno0UTctdjVqWkpZN01qRmdLdEYzdl9QU3p6OUhKSzl6VUtwbE9xTmp3M1JoaUpkd05uRTlUbC1xS2x4SmFRSHNkNzdZZm15alhKWmh5MDg4VnJiNldnR04yT3NkOUh2cXA2bWZpSQ?oc=5" target="_blank" rel="noopener noreferrer">Green ammonia unlikely to be ‘bottleneck’ to pioneering new dual-fuel vessels - Tradewinds News</a>
+      <p class="summary">Green ammonia unlikely to be ‘bottleneck’ to pioneering new dual-fuel vessels Tradewinds News</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Shipping</span><span class="tag">Markets</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMivwFBVV95cUxNZm4tMVNMRUNJelE5VlR2cnFqUzdhenZ1dmowR1RYSzZCaUgtUWxua3hkSk54Q2xubEYwbmYyNENYdXRBdGRyWklJUEtFTjh4UkJxNzBJdk95Rno0UTctdjVqWkpZN01qRmdLdEYzdl9QU3p6OUhKSzl6VUtwbE9xTmp3M1JoaUpkd05uRTlUbC1xS2x4SmFRSHNkNzdZZm15alhKWmh5MDg4VnJiNldnR04yT3NkOUh2cXA2bWZpSQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Marine Log • 2026-04-16 18:36 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMirAFBVV95cUxOUmJsNXNtd3dCQ0JUNDFZd25IWmhmSGZITkJib1ZzWTQ4ODhIWklKV0lqYzZacUg4T0pCZWlnei1NSlFKYjh0ZUJyQlRMN0NlNUw4ZlJmSTZxSkZkV2dvbjlySV90MU03V1pfMWxpbjZ1a1VFZzhFSUh5MjBqY2FUSENHN0FUbXA5NklqX2JuWWF6ZHNxMmVsZ3dEMVV0UVJPaUFYT3RCN0hDVjFh?oc=5" target="_blank" rel="noopener noreferrer">Wärtsilä 25 ammonia engine gets a power rating increase - Marine Log</a>
+      <p class="summary">Wärtsilä 25 ammonia engine gets a power rating increase Marine Log</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Shipping</span><span class="tag">Power</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMirAFBVV95cUxOUmJsNXNtd3dCQ0JUNDFZd25IWmhmSGZITkJib1ZzWTQ4ODhIWklKV0lqYzZacUg4T0pCZWlnei1NSlFKYjh0ZUJyQlRMN0NlNUw4ZlJmSTZxSkZkV2dvbjlySV90MU03V1pfMWxpbjZ1a1VFZzhFSUh5MjBqY2FUSENHN0FUbXA5NklqX2JuWWF6ZHNxMmVsZ3dEMVV0UVJPaUFYT3RCN0hDVjFh?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">The Independent • 2026-04-16 15:00 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMisAFBVV95cUxQdTZ6a3YzWGFmUWFmeVloaS1aQ3Q1ZHRpUDJVRWlrWm5Xd21TMnc1V1Jrbi00OFNhS003Z2xrQVkxTU5KbWtFRU9WSnc0eENETE9VZmNvRzIxdXhRTWMzRUJaVloyeVRIazg1WmZZWm5nQWUwaXdIRDJ5ME5DMTVUc1l3YmJnVmFJN3dURjJiRkhzbGplM1ZfQ3hkcGEtWkVtMFVUcjVEc1pwbHhuTjNaaQ?oc=5" target="_blank" rel="noopener noreferrer">Ammonia air pollution hot spots found in parts of UK with most factory farms - The Independent</a>
+      <p class="summary">Ammonia air pollution hot spots found in parts of UK with most factory farms The Independent</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">General</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMisAFBVV95cUxQdTZ6a3YzWGFmUWFmeVloaS1aQ3Q1ZHRpUDJVRWlrWm5Xd21TMnc1V1Jrbi00OFNhS003Z2xrQVkxTU5KbWtFRU9WSnc0eENETE9VZmNvRzIxdXhRTWMzRUJaVloyeVRIazg1WmZZWm5nQWUwaXdIRDJ5ME5DMTVUc1l3YmJnVmFJN3dURjJiRkhzbGplM1ZfQ3hkcGEtWkVtMFVUcjVEc1pwbHhuTjNaaQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Marine News Magazine • 2026-04-16 14:32 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMigAFBVV95cUxQR3B0WXg5LVl1MFluTU44blJJNFlUek5UNXFGZm1tdk9uZmg5dkpYQm1TNUdwcER1U0FpVWpEWi1hQklGNC1rZFg3dWdDUWUxd3BrZmhtSVlKYkd0R0N5WVA3eWlLYlN0UU16X2lFb0FINUkwU3NVVDJGZWVsNDlLbA?oc=5" target="_blank" rel="noopener noreferrer">Wärtsilä Announces Higher Power Rating for Ammonia Engine - Marine News Magazine</a>
+      <p class="summary">Wärtsilä Announces Higher Power Rating for Ammonia Engine Marine News Magazine</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Shipping</span><span class="tag">Power</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMigAFBVV95cUxQR3B0WXg5LVl1MFluTU44blJJNFlUek5UNXFGZm1tdk9uZmg5dkpYQm1TNUdwcER1U0FpVWpEWi1hQklGNC1rZFg3dWdDUWUxd3BrZmhtSVlKYkd0R0N5WVA3eWlLYlN0UU16X2lFb0FINUkwU3NVVDJGZWVsNDlLbA?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Splash247 • 2026-04-16 12:50 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMihAFBVV95cUxNel9LazRlSS1OdnRHcm9lM0NOREIwUGgxT2RsMVJtcHN4NTVMcFdOalBBbzlEYnlyc20yTFpaRUc2a2prc21EcE01eWJlSVc3Q0dXRmRwRVhzMlAtbjhCaXlSNE55dGljS1NGdXo4dHlpNVBJSVhUR0EyOWhzMTJoTWkxTzM?oc=5" target="_blank" rel="noopener noreferrer">Wärtsilä boosts ammonia engine output to match LNG twin - Splash247</a>
+      <p class="summary">Wärtsilä boosts ammonia engine output to match LNG twin Splash247</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">General</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMihAFBVV95cUxNel9LazRlSS1OdnRHcm9lM0NOREIwUGgxT2RsMVJtcHN4NTVMcFdOalBBbzlEYnlyc20yTFpaRUc2a2prc21EcE01eWJlSVc3Q0dXRmRwRVhzMlAtbjhCaXlSNE55dGljS1NGdXo4dHlpNVBJSVhUR0EyOWhzMTJoTWkxTzM?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">PortNews IAA • 2026-04-16 12:35 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMiS0FVX3lxTE9NVldGNTFIczEtM3ZjdXhtYTBHUER2Ui1wM05KSGRsVEJQTExoYWtCNVZUd2UxVmVRdjZrajdSMjJIaTFucEg1Rk42OA?oc=5" target="_blank" rel="noopener noreferrer">Wärtsilä boosts ammonia engine output to match LNG benchmark - PortNews IAA</a>
+      <p class="summary">Wärtsilä boosts ammonia engine output to match LNG benchmark PortNews IAA</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Shipping</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMiS0FVX3lxTE9NVldGNTFIczEtM3ZjdXhtYTBHUER2Ui1wM05KSGRsVEJQTExoYWtCNVZUd2UxVmVRdjZrajdSMjJIaTFucEg1Rk42OA?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">National Pig Association • 2026-04-16 11:46 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMinAFBVV95cUxOUDVuSzFjR0M0SnZ6b21JYXpHUVZ2ajVuTWtxdXpEcTB5UkhOdHAwSkxTcFJ3VTNQakUwSkFRc1RsRmFxWU4xbVMxVHh2MzlEd1NhdU5pNVk3OC1EV2VDN1NJT0g5clhJTXFoZzF3QlQtWEVVSFplUEtGUlFIMzN5Vmg1LU9JeF9RR1c1YU9tLVNzeUlFNGZ4TUhqZnM?oc=5" target="_blank" rel="noopener noreferrer">NPA response to publication of pig and poultry ‘Ammonia Map’ - National Pig Association</a>
+      <p class="summary">NPA response to publication of pig and poultry ‘Ammonia Map’ National Pig Association</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">General</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMinAFBVV95cUxOUDVuSzFjR0M0SnZ6b21JYXpHUVZ2ajVuTWtxdXpEcTB5UkhOdHAwSkxTcFJ3VTNQakUwSkFRc1RsRmFxWU4xbVMxVHh2MzlEd1NhdU5pNVk3OC1EV2VDN1NJT0g5clhJTXFoZzF3QlQtWEVVSFplUEtGUlFIMzN5Vmg1LU9JeF9RR1c1YU9tLVNzeUlFNGZ4TUhqZnM?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">West Central Tribune • 2026-04-16 11:13 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMivwFBVV95cUxOdGV0MzdpTktKN1cySWM4YVVKM0ZxNW84OTNBZ3ZUc3pyYnI3bmc1X0hmaWxUT2M0VHc0RGFRMy1YOHVZYjcxLUZSMnFaQ3BlTWJ4UHpyaTNna0JGREF6cllqQ1dFcTVtaFpvc1VLZVcyeWlkcTNiWHhSYzR0b0RzUUJoMmxDNmtER1BkNVJyWEh3clBSWnBCMTU1VlVVZDE5Y1Y1S2xPbzAwcHJsQVpwTTJzSngtRURKYXN2ZnpwUQ?oc=5" target="_blank" rel="noopener noreferrer">Green fertilizer funding shrinks but still afloat in the Minnesota Legislature talks - West Central Tribune</a>
+      <p class="summary">Green fertilizer funding shrinks but still afloat in the Minnesota Legislature talks West Central Tribune</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Production</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMivwFBVV95cUxOdGV0MzdpTktKN1cySWM4YVVKM0ZxNW84OTNBZ3ZUc3pyYnI3bmc1X0hmaWxUT2M0VHc0RGFRMy1YOHVZYjcxLUZSMnFaQ3BlTWJ4UHpyaTNna0JGREF6cllqQ1dFcTVtaFpvc1VLZVcyeWlkcTNiWHhSYzR0b0RzUUJoMmxDNmtER1BkNVJyWEh3clBSWnBCMTU1VlVVZDE5Y1Y1S2xPbzAwcHJsQVpwTTJzSngtRURKYXN2ZnpwUQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">ship.energy • 2026-04-16 09:42 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMifkFVX3lxTFBZaFh1N2RoaDB5eDVtcU0wbzUybHA4cnFoVkFRbWZaR0NyOVRCM1VBUmktbC1HMUh6VHdySll3cXNBNm5nR0ZNRF9yMGxNYlhrSFl3Y0djSkwzckZfLUVsb1lGZFVKRDZsODRpVUZkNXFrMHVjaERzbDNpNnBtUQ?oc=5" target="_blank" rel="noopener noreferrer">Power increase for Wärtsilä 25 Ammonia engine - ship.energy</a>
+      <p class="summary">Power increase for Wärtsilä 25 Ammonia engine ship.energy</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Shipping</span><span class="tag">Power</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMifkFVX3lxTFBZaFh1N2RoaDB5eDVtcU0wbzUybHA4cnFoVkFRbWZaR0NyOVRCM1VBUmktbC1HMUh6VHdySll3cXNBNm5nR0ZNRF9yMGxNYlhrSFl3Y0djSkwzckZfLUVsb1lGZFVKRDZsODRpVUZkNXFrMHVjaERzbDNpNnBtUQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Cision News • 2026-04-16 08:00 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMi7AFBVV95cUxPUWVzNEpsT3NwR0tpOThxTXhQQ1p2ZFlSSHdFRmY3eFpGbUdLRVZtT19hMVhQSEJZQjVycmtPOEZodmxwUFZUbjNYQTlTLWNYZm0tcGktS3Y0MEdxVFJxU1hmbXczV0h6U3RIWktCM3NlTHhQQjZ1dDRxRVNUcWxuMzlkRFk2MXpfV3FZZEdYUUM4QXRXRW9DWUdTLVBEYVlPVTdNQUtFZGtjRHdGRlBqakFwQ3pEOS0xNE9aOWxyTEtYUEJBaFEtZVl4c2xrb3BxX3oyNlQ5bU4wV1FOWHFYZmREX3JLT2tMUUdmTA?oc=5" target="_blank" rel="noopener noreferrer">Wärtsilä s 4 stroke engine solution for ammonia fuel now offers a higher power rating Wärtsilä Corporation - Cision News</a>
+      <p class="summary">Wärtsilä s 4 stroke engine solution for ammonia fuel now offers a higher power rating Wärtsilä Corporation Cision News</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Power</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMi7AFBVV95cUxPUWVzNEpsT3NwR0tpOThxTXhQQ1p2ZFlSSHdFRmY3eFpGbUdLRVZtT19hMVhQSEJZQjVycmtPOEZodmxwUFZUbjNYQTlTLWNYZm0tcGktS3Y0MEdxVFJxU1hmbXczV0h6U3RIWktCM3NlTHhQQjZ1dDRxRVNUcWxuMzlkRFk2MXpfV3FZZEdYUUM4QXRXRW9DWUdTLVBEYVlPVTdNQUtFZGtjRHdGRlBqakFwQ3pEOS0xNE9aOWxyTEtYUEJBaFEtZVl4c2xrb3BxX3oyNlQ5bU4wV1FOWHFYZmREX3JLT2tMUUdmTA?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">The Guardian • 2026-04-16 06:46 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMiqwFBVV95cUxQWU1XQlhFNlM2dVQtVklsNnd3QXdTR2hwckJoMFJFdEgzTmJ1eWVFMUdFTE9LM0s0RGY2Q2lCNEFJeU9CUGgyS3pZRmlWZGZwWXBSWDZWUUFTOGdsSHpQOXEtcUpOQlU1ZmdqNVN5RkdYUGliZjl1dnI4cjh3U0VoLU5DTDR1bFZzTGEySWZERlp1WTlJTHE0d0JFZjZoWnQ0cDJWcGtNTzJYbVE?oc=5" target="_blank" rel="noopener noreferrer">Ammonia pollution hotspots found in areas of UK with most pig and poultry factory farms - The Guardian</a>
+      <p class="summary">Ammonia pollution hotspots found in areas of UK with most pig and poultry factory farms The Guardian</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">General</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMiqwFBVV95cUxQWU1XQlhFNlM2dVQtVklsNnd3QXdTR2hwckJoMFJFdEgzTmJ1eWVFMUdFTE9LM0s0RGY2Q2lCNEFJeU9CUGgyS3pZRmlWZGZwWXBSWDZWUUFTOGdsSHpQOXEtcUpOQlU1ZmdqNVN5RkdYUGliZjl1dnI4cjh3U0VoLU5DTDR1bFZzTGEySWZERlp1WTlJTHE0d0JFZjZoWnQ0cDJWcGtNTzJYbVE?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">S&amp;P Global • 2026-04-16 04:09 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMi5gFBVV95cUxNSVRhSGh0OGlKWmduVVgxV2h3RTRKR3RXaDQ3X2piTmFXS0Fld3RsR0Y3MVppV0M3ZjZXY0ptX0lMOEVnYXBvcnUxanRBVHFEc2tnUEZVZlQtTzlDZkxmRWxsekF5Y1MtbnM3QjNvWnhrS3FVWmpOUFZxRkpLMXB5ZlQtWXl2bnJYaWt6T2l2Wmd4OUhkcVBpeG5xZmw3d1BiUVl5NktGTEZDWE5vSkdIRWZHY0txZmFDX0ZTRlFHQWpLSVFLX1o5R2REaGZoQjFibkd0MnRlTTcxODZCSGF2aWx3LUo2UQ?oc=5" target="_blank" rel="noopener noreferrer">Europe&#x27;s ammonia imports fall in Q1 as buyers shun US product under CBAM - S&amp;P Global</a>
+      <p class="summary">Europe&#x27;s ammonia imports fall in Q1 as buyers shun US product under CBAM S&amp;P Global</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Shipping</span><span class="tag">Markets</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMi5gFBVV95cUxNSVRhSGh0OGlKWmduVVgxV2h3RTRKR3RXaDQ3X2piTmFXS0Fld3RsR0Y3MVppV0M3ZjZXY0ptX0lMOEVnYXBvcnUxanRBVHFEc2tnUEZVZlQtTzlDZkxmRWxsekF5Y1MtbnM3QjNvWnhrS3FVWmpOUFZxRkpLMXB5ZlQtWXl2bnJYaWt6T2l2Wmd4OUhkcVBpeG5xZmw3d1BiUVl5NktGTEZDWE5vSkdIRWZHY0txZmFDX0ZTRlFHQWpLSVFLX1o5R2REaGZoQjFibkd0MnRlTTcxODZCSGF2aWx3LUo2UQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Farmers Weekly • 2026-04-15 23:18 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMiowFBVV95cUxPa09hUDF2ejYxQ1dJbVh6dDFuZW1yaEpwNGpUX3lIeS1uU3hhOFJwT29EcjVCa3pGRDFzQVZuMy1lS3Z0RW9hdXdGX1d6V284eDgxdU9vV3loZmdnbnRwOVJkYWJyX2Y2dU5tUHlQcHBrbjF3X3RzZ1RvV1VnY2FZRHctdlA5SWVncEF0RHI0MHVJZmZpeXVKeXY5UFVuWHB2clZ3?oc=5" target="_blank" rel="noopener noreferrer">Pig and poultry sectors reject new claims about ammonia levels - Farmers Weekly</a>
+      <p class="summary">Pig and poultry sectors reject new claims about ammonia levels Farmers Weekly</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">General</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMiowFBVV95cUxPa09hUDF2ejYxQ1dJbVh6dDFuZW1yaEpwNGpUX3lIeS1uU3hhOFJwT29EcjVCa3pGRDFzQVZuMy1lS3Z0RW9hdXdGX1d6V284eDgxdU9vV3loZmdnbnRwOVJkYWJyX2Y2dU5tUHlQcHBrbjF3X3RzZ1RvV1VnY2FZRHctdlA5SWVncEF0RHI0MHVJZmZpeXVKeXY5UFVuWHB2clZ3?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Hydrogen Insight • 2026-04-15 18:19 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMiywFBVV95cUxPdlc1ZEoxQzVkR29OaHZyRzVYdDktM3hrN2hFNkFyQXFsNTRjYzExTjJxLXBySENlbk1MMXNITDlvVEp0aFc3SElURUxYSVZtRzFZNWZmV2txaEVuQU5Oc1pZZjVGVHlPcHlPdHhWalNZS284Sk1lVzRkUVMzWDBjOEpzZGdfbmFBMTN3NkozWWZoYzlnYlVmWXpQd0k1MVZzNjZVbmt2MWF5LS1jc211WUk3NUl0dVllVGtWVmFNQmI5TnVEQ084TlltRQ?oc=5" target="_blank" rel="noopener noreferrer">German city of Hamburg grants final approval for new ammonia import terminal - Hydrogen Insight</a>
+      <p class="summary">German city of Hamburg grants final approval for new ammonia import terminal Hydrogen Insight</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Shipping</span><span class="tag">Projects</span><span class="tag">Markets</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMiywFBVV95cUxPdlc1ZEoxQzVkR29OaHZyRzVYdDktM3hrN2hFNkFyQXFsNTRjYzExTjJxLXBySENlbk1MMXNITDlvVEp0aFc3SElURUxYSVZtRzFZNWZmV2txaEVuQU5Oc1pZZjVGVHlPcHlPdHhWalNZS284Sk1lVzRkUVMzWDBjOEpzZGdfbmFBMTN3NkozWWZoYzlnYlVmWXpQd0k1MVZzNjZVbmt2MWF5LS1jc211WUk3NUl0dVllVGtWVmFNQmI5TnVEQ084TlltRQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Quantum Commodity Intelligence • 2026-04-15 16:54 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMiuwFBVV95cUxQdlY1Sml0b2UwLXYtOVpIMFhjWWdxYXlPRW1WRlh3YnRYYURXS0Fkdjc1MGNxSW51NzhENXFSMEVXbkNwbDZLWDJTcUFRRE1OeUxVZ3pEamI5bHpWdUNRUU1ERm9EVkczOGppOEszYnRzTkZ4Y3NEcG5XcXptbG1YLWw1UDVwV3lmNnQ0Q0hCZXFyMVdrV1Vvc2lFb3VGbFZXZG5kMjBTWkxDRTFsdEEwQWZtVVhKY1Qwb2JF?oc=5" target="_blank" rel="noopener noreferrer">India predicts less rainfall ahead of critical ammonia demand season - Quantum Commodity Intelligence</a>
+      <p class="summary">India predicts less rainfall ahead of critical ammonia demand season Quantum Commodity Intelligence</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Markets</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMiuwFBVV95cUxQdlY1Sml0b2UwLXYtOVpIMFhjWWdxYXlPRW1WRlh3YnRYYURXS0Fkdjc1MGNxSW51NzhENXFSMEVXbkNwbDZLWDJTcUFRRE1OeUxVZ3pEamI5bHpWdUNRUU1ERm9EVkczOGppOEszYnRzTkZ4Y3NEcG5XcXptbG1YLWw1UDVwV3lmNnQ0Q0hCZXFyMVdrV1Vvc2lFb3VGbFZXZG5kMjBTWkxDRTFsdEEwQWZtVVhKY1Qwb2JF?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Quantum Commodity Intelligence • 2026-04-15 12:39 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMiuwFBVV95cUxPU0JjTWtjRkdtMGdnZldjXzlrUUtlNllxY1ZNYXhLSEZLZjIzSnhMUVFEbVdhU2wxX0VaZGd4MGpCeThpelVuSkRqZE9FM2szNzdUU1pqblBraTY0ckMtTnQyQmtBSFVlTm8yYkI0NU1KNmdCVFRuZzdidEVlVmpnaEpPM0FIRE1pR1NrU2prY1FualBWNE9HUE5McnIxY3dRR3V5LUctWGdpNFBiLWYyXy1rTEZ1V2FTNGVB?oc=5" target="_blank" rel="noopener noreferrer">India &quot;most impacted&quot; by Middle East ammonia supply cuts, Wood Mac says - Quantum Commodity Intelligence</a>
+      <p class="summary">India &quot;most impacted&quot; by Middle East ammonia supply cuts, Wood Mac says Quantum Commodity Intelligence</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Markets</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMiuwFBVV95cUxPU0JjTWtjRkdtMGdnZldjXzlrUUtlNllxY1ZNYXhLSEZLZjIzSnhMUVFEbVdhU2wxX0VaZGd4MGpCeThpelVuSkRqZE9FM2szNzdUU1pqblBraTY0ckMtTnQyQmtBSFVlTm8yYkI0NU1KNmdCVFRuZzdidEVlVmpnaEpPM0FIRE1pR1NrU2prY1FualBWNE9HUE5McnIxY3dRR3V5LUctWGdpNFBiLWYyXy1rTEZ1V2FTNGVB?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">hometownsource.com • 2026-04-15 11:00 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMi-wFBVV95cUxNdklsTXZxb1VpNDF5bkdWM1p6bXRpc1JoZUR5N2hVcUpwN3FmNzJHY0dQbVNYbjNfZEY5c3F5Rk9NV24wRExkYjNxZkxFT21IOERtME1RZnJxNDQ5WmpTbzlrN3dXZUQ3bVAzSVhOWDliLXBpbjA4X2I0bmV3VmpXeVNDdEZSV2EyUm41enlwdnk5dDVQcExKS0dZX2liWjBTeVl1MmNYZjdDek1XelVmbU1KNE9hM2REeEM4R3dhUDVwZ1ZKMUFfajZFVUNJQVFfcWxRZFEwSnJ0dnBadXkwRTlucFE5MVMxS1BtcUl6V1ctZFp0ZENITktmWQ?oc=5" target="_blank" rel="noopener noreferrer">Proposed fertilizer plant could bring ammonia production to Minnesota - hometownsource.com</a>
+      <p class="summary">Proposed fertilizer plant could bring ammonia production to Minnesota hometownsource.com</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Projects</span><span class="tag">Production</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMi-wFBVV95cUxNdklsTXZxb1VpNDF5bkdWM1p6bXRpc1JoZUR5N2hVcUpwN3FmNzJHY0dQbVNYbjNfZEY5c3F5Rk9NV24wRExkYjNxZkxFT21IOERtME1RZnJxNDQ5WmpTbzlrN3dXZUQ3bVAzSVhOWDliLXBpbjA4X2I0bmV3VmpXeVNDdEZSV2EyUm41enlwdnk5dDVQcExKS0dZX2liWjBTeVl1MmNYZjdDek1XelVmbU1KNE9hM2REeEM4R3dhUDVwZ1ZKMUFfajZFVUNJQVFfcWxRZFEwSnJ0dnBadXkwRTlucFE5MVMxS1BtcUl6V1ctZFp0ZENITktmWQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">News of Bahrain • 2026-04-15 09:00 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMiXkFVX3lxTFBqeUtPRGdYREFDUzBrc3VzSnZLTHBmN2t5V04xQWcybjJqYVltRF9MZDV3bUV5aWN3RlEtc3JscUpGSmRKdWJoZXVQSklza0I4SjQxMzd3SzZTbUl4cUE?oc=5" target="_blank" rel="noopener noreferrer">Understanding Ammonia Gas Exposure and Its Health Impact - News of Bahrain</a>
+      <p class="summary">Understanding Ammonia Gas Exposure and Its Health Impact News of Bahrain</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">General</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMiXkFVX3lxTFBqeUtPRGdYREFDUzBrc3VzSnZLTHBmN2t5V04xQWcybjJqYVltRF9MZDV3bUV5aWN3RlEtc3JscUpGSmRKdWJoZXVQSklza0I4SjQxMzd3SzZTbUl4cUE?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Inspenet • 2026-04-14 19:27 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMikwFBVV95cUxPdW5KQ0w2VWo2LVpHdmZUWmlzcHNUZ204bFEtMVY0MjR2M3VCSEw0OE5PWjR6aUN4WWhzMXcySWcyM01LbWc0SzkwZkxFVk91MXBRS1lJOVFqY2d0MEJ0eHlMc3o2cGtnRWxQUHJac2VycWNrWnItQXNNUWJYVHoyWWJrWEJRYmhtRWQ0dHpHbUxpalk?oc=5" target="_blank" rel="noopener noreferrer">HD Hyundai unveils the world’s first ammonia-powered vessels - Inspenet</a>
+      <p class="summary">HD Hyundai unveils the world’s first ammonia-powered vessels Inspenet</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Shipping</span><span class="tag">Power</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMikwFBVV95cUxPdW5KQ0w2VWo2LVpHdmZUWmlzcHNUZ204bFEtMVY0MjR2M3VCSEw0OE5PWjR6aUN4WWhzMXcySWcyM01LbWc0SzkwZkxFVk91MXBRS1lJOVFqY2d0MEJ0eHlMc3o2cGtnRWxQUHJac2VycWNrWnItQXNNUWJYVHoyWWJrWEJRYmhtRWQ0dHpHbUxpalk?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">MSN • 2026-04-14 06:14 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMi6AFBVV95cUxQdmt0SkxEcTFBMHdHUmxSdndRVWFwSVBLU3RRczFNazY5a0hfQ1BhLVBvbkxxSTJzQnZCei1CbWg2Z3VqT1RaWkhOWnpLNFVJUjViNnJqbjhnNjQzZFl5VlVzdlhfdy0xTnR3UU94Ry16OG1PTVBoMUV4OFJ0bnoxQVFZdE8yNWdoQjdmd3F1dGxISUFiLXVjNl9XQVZRWFY0REdsN0psajhGSl9Fa21Rc0psbFVvWktGSlR5NlhjRENsN2FXMlNvZGFUMTh0OGFCQUZ3SFA0YzNxNVRRSnFHcEU0ajRWUTlq?oc=5" target="_blank" rel="noopener noreferrer">Ukrainian drones hit major Russian ammonia plant in deep strike - MSN</a>
+      <p class="summary">Ukrainian drones hit major Russian ammonia plant in deep strike MSN</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Projects</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMi6AFBVV95cUxQdmt0SkxEcTFBMHdHUmxSdndRVWFwSVBLU3RRczFNazY5a0hfQ1BhLVBvbkxxSTJzQnZCei1CbWg2Z3VqT1RaWkhOWnpLNFVJUjViNnJqbjhnNjQzZFl5VlVzdlhfdy0xTnR3UU94Ry16OG1PTVBoMUV4OFJ0bnoxQVFZdE8yNWdoQjdmd3F1dGxISUFiLXVjNl9XQVZRWFY0REdsN0psajhGSl9Fa21Rc0psbFVvWktGSlR5NlhjRENsN2FXMlNvZGFUMTh0OGFCQUZ3SFA0YzNxNVRRSnFHcEU0ajRWUTlq?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Mercomindia.com • 2026-04-14 05:46 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMipwFBVV95cUxQbWMyblR5M0VzYmkyMTZsQVpuSThlaUpjd2ZvMDFVR3h2YXo3a3UwSHdNaW5pN0NPWDQ4SzZoZzRfR1ZZT3pncnkzMVBiNENjV1JvSnZxN2ptSEFRaVhPVU5sVTkxb2NsR1lPcVVkTXBsQWVJM1FRbldmazFEVTRKYXlXMkZBOEFMOWROWmNNSzRxM25QaDJwVjg3V0NsVnhwNmd3cUg0QQ?oc=5" target="_blank" rel="noopener noreferrer">Bihar Targets 100,000 Tons of Green Hydrogen/Green Ammonia Production by 2031 - Mercomindia.com</a>
+      <p class="summary">Bihar Targets 100,000 Tons of Green Hydrogen/Green Ammonia Production by 2031 Mercomindia.com</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Production</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMipwFBVV95cUxQbWMyblR5M0VzYmkyMTZsQVpuSThlaUpjd2ZvMDFVR3h2YXo3a3UwSHdNaW5pN0NPWDQ4SzZoZzRfR1ZZT3pncnkzMVBiNENjV1JvSnZxN2ptSEFRaVhPVU5sVTkxb2NsR1lPcVVkTXBsQWVJM1FRbldmazFEVTRKYXlXMkZBOEFMOWROWmNNSzRxM25QaDJwVjg3V0NsVnhwNmd3cUg0QQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Balkanweb.com • 2026-04-14 00:30 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMirgFBVV95cUxPMzNpQU1hUjY2OHBmb1pyTkdZQnpFSXhLUzZCdE82NGZGMEVFcVpZQmxhbVBBTkxhRnl5LWhnSURMNnN0M0FnSFpvTWxXQWUxVVROYk11UVNnQ0xWVEp6eEpYTVM5VlYtZjFhUXhreUpzcEkyMlM0amRSSm5NY3lUb1dISEpZblVNaWNNQ0V3V2hsUjNYbFJEdWlDU0NnTENvcUFoYVllZGlXUDBEZUE?oc=5" target="_blank" rel="noopener noreferrer">Ukrainian drones strike ammonia plant in northern Russia after Easter ceasefire - Balkanweb.com</a>
+      <p class="summary">Ukrainian drones strike ammonia plant in northern Russia after Easter ceasefire Balkanweb.com</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Projects</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMirgFBVV95cUxPMzNpQU1hUjY2OHBmb1pyTkdZQnpFSXhLUzZCdE82NGZGMEVFcVpZQmxhbVBBTkxhRnl5LWhnSURMNnN0M0FnSFpvTWxXQWUxVVROYk11UVNnQ0xWVEp6eEpYTVM5VlYtZjFhUXhreUpzcEkyMlM0amRSSm5NY3lUb1dISEpZblVNaWNNQ0V3V2hsUjNYbFJEdWlDU0NnTENvcUFoYVllZGlXUDBEZUE?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">MSN • 2026-04-13 23:07 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMi2wFBVV95cUxQOHlrWEROakI4MVprdkl2eUZ6VjNfTlJndzRxbDJzX2dHVXVteW1ySzlsNWxKeFRnSjFjRDA3NDZad1hPWmd6OWlDdTI5SzgtVXNNUjBjOGpsZDF5LVJxY0xRN3ZucDFDMVE4Y3dpdnBuUkQyTElwUDFmeXQxZ1VSajl4V3NTU1dRQW1hOTlFRDktUjU0c1BjUTRkc2o3NE9vVVFJMk0tQ3ZWWUhJSktfV3NaR0p4Wnp3d1hXY3ctdmlWUlkyT1FCSzR0QUNGbDhhNjdYR2Q1RUxaSmc?oc=5" target="_blank" rel="noopener noreferrer">Ukraine drone strike hits major Russian ammonia plant - MSN</a>
+      <p class="summary">Ukraine drone strike hits major Russian ammonia plant MSN</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Projects</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMi2wFBVV95cUxQOHlrWEROakI4MVprdkl2eUZ6VjNfTlJndzRxbDJzX2dHVXVteW1ySzlsNWxKeFRnSjFjRDA3NDZad1hPWmd6OWlDdTI5SzgtVXNNUjBjOGpsZDF5LVJxY0xRN3ZucDFDMVE4Y3dpdnBuUkQyTElwUDFmeXQxZ1VSajl4V3NTU1dRQW1hOTlFRDktUjU0c1BjUTRkc2o3NE9vVVFJMk0tQ3ZWWUhJSktfV3NaR0p4Wnp3d1hXY3ctdmlWUlkyT1FCSzR0QUNGbDhhNjdYR2Q1RUxaSmc?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Hydrogen Insight • 2026-04-13 19:42 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMi2wFBVV95cUxQVGl0YTEyNTdOeFZ4bHdGX3FaY0FEcDB5X1A1Ty1kWnZGLVJ6RUxvSWNoOVdld0d2cUhDclNoQkxSZnloa0JXbjl0eVNZRy16ZERHYXVqNEVtc25FcEtZNzUyQlRFcDdmMWtRRDE3SW5FQkhwNHZlcGhwWVhJcUI4bzl2X09PR0NDcDN1N3l4WGlTTUdENTd2Vmk3cnBQNWV5eGNaOFVPbWZ6d1ZGRWlYVmJNdi1WdmZLS0dIcTA3LUZ0ajg4b0JHeHRaLV9pNk9xOXlkNGw0QkQzbDQ?oc=5" target="_blank" rel="noopener noreferrer">Chinese oil &amp; gas producer aims to build 500MW green hydrogen and ammonia project in Egypt - Hydrogen Insight</a>
+      <p class="summary">Chinese oil &amp; gas producer aims to build 500MW green hydrogen and ammonia project in Egypt Hydrogen Insight</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Projects</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMi2wFBVV95cUxQVGl0YTEyNTdOeFZ4bHdGX3FaY0FEcDB5X1A1Ty1kWnZGLVJ6RUxvSWNoOVdld0d2cUhDclNoQkxSZnloa0JXbjl0eVNZRy16ZERHYXVqNEVtc25FcEtZNzUyQlRFcDdmMWtRRDE3SW5FQkhwNHZlcGhwWVhJcUI4bzl2X09PR0NDcDN1N3l4WGlTTUdENTd2Vmk3cnBQNWV5eGNaOFVPbWZ6d1ZGRWlYVmJNdi1WdmZLS0dIcTA3LUZ0ajg4b0JHeHRaLV9pNk9xOXlkNGw0QkQzbDQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Thomasnet • 2026-04-13 19:05 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMigwFBVV95cUxPbTF3RkMwT3hHYXQzdHBnUUNVeU8xbHFieFhIaGgwUUViZFdTVS1kelh3Uk1jdmhZLWM2eHYzRm0waURFY3MwWng3bnZvRnlKZ1Y4WXFoUzZFX1RKR2ZoTkFDOEg2WUcyVU9BS0dtR1B1NTFYT1RRRVVWZ1p6SENBSmZpaw?oc=5" target="_blank" rel="noopener noreferrer">HD Hyundai Heavy Industries Launches World’s First Ammonia-Powered Ships - Thomasnet</a>
+      <p class="summary">HD Hyundai Heavy Industries Launches World’s First Ammonia-Powered Ships Thomasnet</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Shipping</span><span class="tag">Power</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMigwFBVV95cUxPbTF3RkMwT3hHYXQzdHBnUUNVeU8xbHFieFhIaGgwUUViZFdTVS1kelh3Uk1jdmhZLWM2eHYzRm0waURFY3MwWng3bnZvRnlKZ1Y4WXFoUzZFX1RKR2ZoTkFDOEg2WUcyVU9BS0dtR1B1NTFYT1RRRVVWZ1p6SENBSmZpaw?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">KAXE • 2026-04-13 18:51 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMinwFBVV95cUxNWUN2N0xydllwdUJ1cTA3anJyU1pzMFpLTzZVam5PcEU3R0pndUNVT2E4UjJvNzVyclRxQkhyRFRKRG5vMUtPSDJoRDA1SndTQ2tGdTQ4RWNFUFBqenhuT1NsVDJ2MFdvb1l3YXg0RVNuZmxLWjVjSktuU0ZoZ2RZRnZrTWk4UWpLbkc0cnZ5Skp6MUZaVU1CeGxxNU5MaWM?oc=5" target="_blank" rel="noopener noreferrer">Groups pitch idea of using wind power to generate ammonia fertilizer - KAXE</a>
+      <p class="summary">Groups pitch idea of using wind power to generate ammonia fertilizer KAXE</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Production</span><span class="tag">Power</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMinwFBVV95cUxNWUN2N0xydllwdUJ1cTA3anJyU1pzMFpLTzZVam5PcEU3R0pndUNVT2E4UjJvNzVyclRxQkhyRFRKRG5vMUtPSDJoRDA1SndTQ2tGdTQ4RWNFUFBqenhuT1NsVDJ2MFdvb1l3YXg0RVNuZmxLWjVjSktuU0ZoZ2RZRnZrTWk4UWpLbkc0cnZ5Skp6MUZaVU1CeGxxNU5MaWM?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">The Economic Times • 2026-04-13 18:47 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMi5wFBVV95cUxNOEhJSHEwQTh2cDBqTWdiVTMteF83Vlo0cHc3aWNHLVhwS3BNczFZUWhwdW5ic1poS0d5TjAwYklDeEc5UnJIOEpUX0UyQ1JUeVBBUk80dkd4T3pMMDBZR1BxWjZZWjZyVWdjSWVWSE5XMmM1Qjd6d24ySzd5WDBuNUpXcXJxaURUTlJUVlcxNXJUQ1F2bEhZd0p4SFZMSjlBQWpOOGdhRmVpMnhjRU5vT3hDZUxDRnhEX21IbHViRi04dTlNWlVibGM5NnFlMWlOTFQwTFlzdGlSR09vMUtFWHdrcjZwMzDSAewBQVVfeXFMTUlsOHBKbUV0UW05UFFscVhQdmhwWTRXUlFmX2k4dTZZNUNHSTlqbGVyQ2pscmRCanVRcmlSV0lWU3VlZHBScktVZWk5WEZkRC1sTDdIX1BGTDV2Y0xmbXhKSXdpYUhKVDB6RWNDbUp1MnFHOU9VUXJFRDNiTzBYWkZvc2FTZWJNNGVJRFZ5LTY4ckFTdUFiX3hhRWE4WlR6aTIyWGV3X0xqSnJ1TGY0RVF2RHVxbkx5SWNKcy1uQnhBRVpjd3RPME5FX0E0ZGhwNEV4WFhfZ21BTEE4ZmE5SWdfeHJxWV96b3Zlc2E?oc=5" target="_blank" rel="noopener noreferrer">India&#x27;s global Ammonia tender likely ahead to secure fertilizer production - The Economic Times</a>
+      <p class="summary">India&#x27;s global Ammonia tender likely ahead to secure fertilizer production The Economic Times</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Production</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMi5wFBVV95cUxNOEhJSHEwQTh2cDBqTWdiVTMteF83Vlo0cHc3aWNHLVhwS3BNczFZUWhwdW5ic1poS0d5TjAwYklDeEc5UnJIOEpUX0UyQ1JUeVBBUk80dkd4T3pMMDBZR1BxWjZZWjZyVWdjSWVWSE5XMmM1Qjd6d24ySzd5WDBuNUpXcXJxaURUTlJUVlcxNXJUQ1F2bEhZd0p4SFZMSjlBQWpOOGdhRmVpMnhjRU5vT3hDZUxDRnhEX21IbHViRi04dTlNWlVibGM5NnFlMWlOTFQwTFlzdGlSR09vMUtFWHdrcjZwMzDSAewBQVVfeXFMTUlsOHBKbUV0UW05UFFscVhQdmhwWTRXUlFmX2k4dTZZNUNHSTlqbGVyQ2pscmRCanVRcmlSV0lWU3VlZHBScktVZWk5WEZkRC1sTDdIX1BGTDV2Y0xmbXhKSXdpYUhKVDB6RWNDbUp1MnFHOU9VUXJFRDNiTzBYWkZvc2FTZWJNNGVJRFZ5LTY4ckFTdUFiX3hhRWE4WlR6aTIyWGV3X0xqSnJ1TGY0RVF2RHVxbkx5SWNKcy1uQnhBRVpjd3RPME5FX0E0ZGhwNEV4WFhfZ21BTEE4ZmE5SWdfeHJxWV96b3Zlc2E?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">energynews.pro • 2026-04-13 18:29 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMinwFBVV95cUxPNHpnS1BvOFhTVER3ZDJTT3RYMWZYRFh6dkdrU21aU3hnMk13WTZibkJNYzVHb2F0VU1sRjlPMlZqY3ZYeVk3dmZXU2hQR2VnU3gydy1JZi01dTVKWHprOEx0UXlCRjJUamxlam5BNUpVZlBoWWh2WVdINmdhdXdCQVFSSFlvdkVtd0NIWV92c3VzQWN4djFLa3dpU191ZjA?oc=5" target="_blank" rel="noopener noreferrer">Amogy and GS E&amp;C Launch Joint Venture Targeting 40 MW Green Ammonia Power - energynews.pro</a>
+      <p class="summary">Amogy and GS E&amp;C Launch Joint Venture Targeting 40 MW Green Ammonia Power energynews.pro</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Power</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMinwFBVV95cUxPNHpnS1BvOFhTVER3ZDJTT3RYMWZYRFh6dkdrU21aU3hnMk13WTZibkJNYzVHb2F0VU1sRjlPMlZqY3ZYeVk3dmZXU2hQR2VnU3gydy1JZi01dTVKWHprOEx0UXlCRjJUamxlam5BNUpVZlBoWWh2WVdINmdhdXdCQVFSSFlvdkVtd0NIWV92c3VzQWN4djFLa3dpU191ZjA?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">ChemAnalyst • 2026-04-13 17:12 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMizwFBVV95cUxPX1hjMnRJSXk2dEJRVl94OTF6S3J0U002QXAxX1doOFFQMmlMUWxGNlAtMXAzYjc2b3JBM0h6NU90ZG40aGFiM29oMGdHWjhGTzRmeUR3d3pkUzRuWXRnVEtUTWhEX2IwUkpsZXI3NkhpcngyVG9hV3dCdEdjYVFORFo0NWhaQnVlODBnMXUwYTFXUXF1dklHYXFzT3VrUUtVVG1kc3NGbUNNd1hIRnhraVRwc2pMWWI3ZzgtQ2o1NWZ0Sk9XR0w0cUxhM1ZjTk0?oc=5" target="_blank" rel="noopener noreferrer">HD Hyundai finishes construction of the world’s first ammonia-powered tankers - ChemAnalyst</a>
+      <p class="summary">HD Hyundai finishes construction of the world’s first ammonia-powered tankers ChemAnalyst</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Power</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMizwFBVV95cUxPX1hjMnRJSXk2dEJRVl94OTF6S3J0U002QXAxX1doOFFQMmlMUWxGNlAtMXAzYjc2b3JBM0h6NU90ZG40aGFiM29oMGdHWjhGTzRmeUR3d3pkUzRuWXRnVEtUTWhEX2IwUkpsZXI3NkhpcngyVG9hV3dCdEdjYVFORFo0NWhaQnVlODBnMXUwYTFXUXF1dklHYXFzT3VrUUtVVG1kc3NGbUNNd1hIRnhraVRwc2pMWWI3ZzgtQ2o1NWZ0Sk9XR0w0cUxhM1ZjTk0?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">MSN • 2026-04-13 16:22 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMi1AFBVV95cUxQeVZ2dC04TWprd2phN2hzN3Y2QlhGZlVET0pFRUpfb2YyeXR1SnFXR1lYcHZDOXJTcXBzRFpVUUh3eTBicjFkTWRPNkFMRng3OGZzZm5fX1JadWxVNFhSMFg4eTViNThsVDdJUGExcHVfalRrMEpHYV9YZ1pYZmtlbFF1SHVSeFFFWkQxWk1GVkNNTFAwbDZOZ250NHg5R3RqR3BwOEJrdi00OS1lbVh3d3R4bVBxUWd6eGRTX3pSOVQ5ZHItMHhBa0MtT3V5UmJ1dFYzaw?oc=5" target="_blank" rel="noopener noreferrer">Ukrainian drones hit major Russian ammonia plant - MSN</a>
+      <p class="summary">Ukrainian drones hit major Russian ammonia plant MSN</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Projects</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMi1AFBVV95cUxQeVZ2dC04TWprd2phN2hzN3Y2QlhGZlVET0pFRUpfb2YyeXR1SnFXR1lYcHZDOXJTcXBzRFpVUUh3eTBicjFkTWRPNkFMRng3OGZzZm5fX1JadWxVNFhSMFg4eTViNThsVDdJUGExcHVfalRrMEpHYV9YZ1pYZmtlbFF1SHVSeFFFWkQxWk1GVkNNTFAwbDZOZ250NHg5R3RqR3BwOEJrdi00OS1lbVh3d3R4bVBxUWd6eGRTX3pSOVQ5ZHItMHhBa0MtT3V5UmJ1dFYzaw?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">DredgeWire • 2026-04-13 10:42 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMitgFBVV95cUxNay1ZZjRhTjN3Nm5TUHctLWVSc0g5ZTNHS3oxelpYQ1lJdUplVS1HTmZ3bFkxUzJpOW9aTmVZN0U4RXYwdFJTZUFINU5laEFHNFhhS2Fic3hKUzB6VkxNZXYzdnFSRjJ3NGJGVTlDdHh0RXRFWnhIR0txLTgycC10UHhNWFF6OHRKMTBwS3lpaHROSU4yZGkzTmw1dTNpRkZYa282SHVwcmFvbmxoM2twVTVDNU5PUQ?oc=5" target="_blank" rel="noopener noreferrer">South Korean Shipbuilder Launches Ammonia-Powered Vessels to Decarbonize Maritime Transport - DredgeWire</a>
+      <p class="summary">South Korean Shipbuilder Launches Ammonia-Powered Vessels to Decarbonize Maritime Transport DredgeWire</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Shipping</span><span class="tag">Power</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMitgFBVV95cUxNay1ZZjRhTjN3Nm5TUHctLWVSc0g5ZTNHS3oxelpYQ1lJdUplVS1HTmZ3bFkxUzJpOW9aTmVZN0U4RXYwdFJTZUFINU5laEFHNFhhS2Fic3hKUzB6VkxNZXYzdnFSRjJ3NGJGVTlDdHh0RXRFWnhIR0txLTgycC10UHhNWFF6OHRKMTBwS3lpaHROSU4yZGkzTmw1dTNpRkZYa282SHVwcmFvbmxoM2twVTVDNU5PUQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">openPR.com • 2026-04-12 11:39 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMinAFBVV95cUxQc2dya2gyRmxxLU1uQkZlamJuRU9lQnIzbFNXVFhZcTI1OF92a1pRLV85N2M4dE5KQlRjdE1WMXJ2MUxuTGwzbmE3eUtCazhiTlpaTTEtWHc1SlRnOUctd0tDcmVIdFp1cThHT0NMVlpTQk5Rc0JIaDJMM1JVY0lQTFBXZVJhSE5laFJfcktUaUlhdG9LUl91eUUyUlQ?oc=5" target="_blank" rel="noopener noreferrer">Blue Ammonia Market to Reach US$ 6,255 Million by 2032 Driven - openPR.com</a>
+      <p class="summary">Blue Ammonia Market to Reach US$ 6,255 Million by 2032 Driven openPR.com</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Markets</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMinAFBVV95cUxQc2dya2gyRmxxLU1uQkZlamJuRU9lQnIzbFNXVFhZcTI1OF92a1pRLV85N2M4dE5KQlRjdE1WMXJ2MUxuTGwzbmE3eUtCazhiTlpaTTEtWHc1SlRnOUctd0tDcmVIdFp1cThHT0NMVlpTQk5Rc0JIaDJMM1JVY0lQTFBXZVJhSE5laFJfcktUaUlhdG9LUl91eUUyUlQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">vocal.media • 2026-04-10 14:06 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMisgFBVV95cUxOUHJKQ3Z2SEhHbTdkRURTRmtlSVJyRzc2WFEyWDVpNFh3WTV5aFpRZXh2bDFxZlZHRDQyVko5U3U0eWxwZ3dfN19nbUw0QXNHU3lTaTNJZURFZDUtU3NSejNlZ2NfNHlFSzlpMkN5b1B1MEIyX2d6N1A3Yzl4cm5uaTlhdzVFaFRWTFNBbkxxMEhya0FlWGFDYnJtTmdmbjd1Qk1tZUdnU2d1NGY0Q3RjSDRR?oc=5" target="_blank" rel="noopener noreferrer">United States Green Ammonia Market Size, Share, Trends, Growth Factors and Forecast 2033 - vocal.media</a>
+      <p class="summary">United States Green Ammonia Market Size, Share, Trends, Growth Factors and Forecast 2033 vocal.media</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Markets</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMisgFBVV95cUxOUHJKQ3Z2SEhHbTdkRURTRmtlSVJyRzc2WFEyWDVpNFh3WTV5aFpRZXh2bDFxZlZHRDQyVko5U3U0eWxwZ3dfN19nbUw0QXNHU3lTaTNJZURFZDUtU3NSejNlZ2NfNHlFSzlpMkN5b1B1MEIyX2d6N1A3Yzl4cm5uaTlhdzVFaFRWTFNBbkxxMEhya0FlWGFDYnJtTmdmbjd1Qk1tZUdnU2d1NGY0Q3RjSDRR?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Quantum Commodity Intelligence • 2026-04-10 11:32 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMiswFBVV95cUxPUkRGVDBVaWg0QU0yQVF6Y0hzQ3FiUXhSdGtKd0k0NFlOM01sajRieDBHWkNGZGRxaTZ4enZiUUlYY08wbThJaTdsaktnWWh5RlpNd1NzTG1EeHpIRjN2WEF3TWMtbmJLTFRXWnd1ZndrYl92aWt5Y2VPUVViRHE1ZEZ1clRiR3RVeUwwX2NMYzRneWVVR3BlMUduQnhmc1dQa3p3VS0ydHczTWpqbzZ1Y0ZOVQ?oc=5" target="_blank" rel="noopener noreferrer">IHI, Petronas subsidiaries sign ammonia power project agreement - Quantum Commodity Intelligence</a>
+      <p class="summary">IHI, Petronas subsidiaries sign ammonia power project agreement Quantum Commodity Intelligence</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Projects</span><span class="tag">Power</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMiswFBVV95cUxPUkRGVDBVaWg0QU0yQVF6Y0hzQ3FiUXhSdGtKd0k0NFlOM01sajRieDBHWkNGZGRxaTZ4enZiUUlYY08wbThJaTdsaktnWWh5RlpNd1NzTG1EeHpIRjN2WEF3TWMtbmJLTFRXWnd1ZndrYl92aWt5Y2VPUVViRHE1ZEZ1clRiR3RVeUwwX2NMYzRneWVVR3BlMUduQnhmc1dQa3p3VS0ydHczTWpqbzZ1Y0ZOVQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Splash247 • 2026-04-10 08:41 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMieEFVX3lxTE5Na2tQSURJemRHRkF2Wk8ycElGS1ptYXZCb3AxSGVINFdZU0cwUUtjaG9ZeFdLSXdndGlNaGVYVUJqeEJDTUlZa3ROaEdsQm9FcUJqZi1Bby1IMjAtZkdPeDEwRVNVNW1IN2otblc2eGlKaWxTZGN6UA?oc=5" target="_blank" rel="noopener noreferrer">Thenamaris moves into ammonia shipping segment - Splash247</a>
+      <p class="summary">Thenamaris moves into ammonia shipping segment Splash247</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Shipping</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMieEFVX3lxTE5Na2tQSURJemRHRkF2Wk8ycElGS1ptYXZCb3AxSGVINFdZU0cwUUtjaG9ZeFdLSXdndGlNaGVYVUJqeEJDTUlZa3ROaEdsQm9FcUJqZi1Bby1IMjAtZkdPeDEwRVNVNW1IN2otblc2eGlKaWxTZGN6UA?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Chosunbiz • 2026-04-10 07:00 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMihAFBVV95cUxQM2xLWGFOVnZyeEprN1BZRFRKNm1hZHRId3FLZ09RTmJrZjdIQU13TkQ0c29vV2U3TDY5UjAyWDUzQkFBNENoSGFEekloLVdabHNFMjNzOFBGSVdrbzcwLU0wUVFSSFhLZ0ZSU0MwZVJBTnNiOXhfajJ1ZDFzVFNjbkszV27SAZgBQVVfeXFMT01NZE11MU1lNUtzTnB2LVBBTk1MSkdaSmNsSTFGV2RtU2lwYmpQWUhMTFdaQmZZZW5kQ2xySVFXMkhiRkdwOE0yNkhGSEZRZEFSQjhXd3paTm1UZjBhY0cwdkRfMEZsY3lvUGgtdTQ0Skk5S1YzcFp6c013bmNpYmdxRnFPdjU2NTlwZHE3dlBZTWtLTFJVQWU?oc=5" target="_blank" rel="noopener noreferrer">GS E&amp;C and Amogy launch green ammonia power JV to target Korea market - CHOSUNBIZ - Chosunbiz</a>
+      <p class="summary">GS E&amp;C and Amogy launch green ammonia power JV to target Korea market - CHOSUNBIZ Chosunbiz</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Power</span><span class="tag">Markets</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMihAFBVV95cUxQM2xLWGFOVnZyeEprN1BZRFRKNm1hZHRId3FLZ09RTmJrZjdIQU13TkQ0c29vV2U3TDY5UjAyWDUzQkFBNENoSGFEekloLVdabHNFMjNzOFBGSVdrbzcwLU0wUVFSSFhLZ0ZSU0MwZVJBTnNiOXhfajJ1ZDFzVFNjbkszV27SAZgBQVVfeXFMT01NZE11MU1lNUtzTnB2LVBBTk1MSkdaSmNsSTFGV2RtU2lwYmpQWUhMTFdaQmZZZW5kQ2xySVFXMkhiRkdwOE0yNkhGSEZRZEFSQjhXd3paTm1UZjBhY0cwdkRfMEZsY3lvUGgtdTQ0Skk5S1YzcFp6c013bmNpYmdxRnFPdjU2NTlwZHE3dlBZTWtLTFJVQWU?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Breakbulk.News • 2026-04-09 15:05 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMikAFBVV95cUxQc1o4V3JfOE4wUmtRdExDdWJrMjVhX2RsMmctQXBpeFFrNU1RV2JwV05jeU5pSGs5aTEyb2t3c2NheTEzNXFtREp3cmFqOFBDNXYyT044bnBzQTV5SEMzMFVkeGpGM2pRVzVIMG1kUTZLMnl4YVcybl95c3Flb1BHblBCMzJLZ2J2OHlqMGdRcjY?oc=5" target="_blank" rel="noopener noreferrer">Exmar names world’s first ammonia dual fuel midsize gas carriers - Breakbulk.News</a>
+      <p class="summary">Exmar names world’s first ammonia dual fuel midsize gas carriers Breakbulk.News</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">General</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMikAFBVV95cUxQc1o4V3JfOE4wUmtRdExDdWJrMjVhX2RsMmctQXBpeFFrNU1RV2JwV05jeU5pSGs5aTEyb2t3c2NheTEzNXFtREp3cmFqOFBDNXYyT044bnBzQTV5SEMzMFVkeGpGM2pRVzVIMG1kUTZLMnl4YVcybl95c3Flb1BHblBCMzJLZ2J2OHlqMGdRcjY?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">ACS Publications • 2026-04-09 06:09 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMiY0FVX3lxTE9XRHJjT2RDZ251Z3pCM19BZ1ZFc1dkYVdfX2haSnowcE9fTHVhaVlzbk9XUjRQbWNEREpuRGZSdXJEdzFOZWtMcURETk9SaTF2aEcwelIwVGtUWldYQmp1ZERvQQ?oc=5" target="_blank" rel="noopener noreferrer">An Ethanol/Ammonia Dual-Responsive Membrane for Separating Complex Emulsions via Vapor Stimulation - ACS Publications</a>
+      <p class="summary">An Ethanol/Ammonia Dual-Responsive Membrane for Separating Complex Emulsions via Vapor Stimulation ACS Publications</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">General</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMiY0FVX3lxTE9XRHJjT2RDZ251Z3pCM19BZ1ZFc1dkYVdfX2haSnowcE9fTHVhaVlzbk9XUjRQbWNEREpuRGZSdXJEdzFOZWtMcURETk9SaTF2aEcwelIwVGtUWldYQmp1ZERvQQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+    <article class="news-card">
+      <div class="card-topline">
+        <div class="meta">Farmonaut • 2026-04-08 18:28 UTC</div>
+        
+      </div>
+      <a class="headline" href="https://news.google.com/rss/articles/CBMimwFBVV95cUxONmhYcVllNkVzc2ZiMG1YbjlpZkdmNHVIMnZmSXRBTW1oR1dLUTNKWDd3REdxZEc0VlNtLWFxR2phdFdxUGlqMVM5VW9CZnVPM1Q4aV8tUUViamx1MGNiclNXNVJNSG8xYlVvZGFJXzRTTzNkb2VqWndPSGZoeGloWlBpTEZTdXpsWDBaVlNvbjQ4NTYzYXN0TjJWTQ?oc=5" target="_blank" rel="noopener noreferrer">Ammonia Agriculture Fertilizer: Agritech &amp; Industry Trends for 2025 and Beyond - Farmonaut</a>
+      <p class="summary">Ammonia Agriculture Fertilizer: Agritech &amp; Industry Trends for 2025 and Beyond Farmonaut</p>
+      <div class="card-footer">
+        <div class="tag-row"><span class="tag">Production</span></div>
+        <a class="read-more" href="https://news.google.com/rss/articles/CBMimwFBVV95cUxONmhYcVllNkVzc2ZiMG1YbjlpZkdmNHVIMnZmSXRBTW1oR1dLUTNKWDd3REdxZEc0VlNtLWFxR2phdFdxUGlqMVM5VW9CZnVPM1Q4aV8tUUViamx1MGNiclNXNVJNSG8xYlVvZGFJXzRTTzNkb2VqWndPSGZoeGloWlBpTEZTdXpsWDBaVlNvbjQ4NTYzYXN0TjJWTQ?oc=5" target="_blank" rel="noopener noreferrer">Read article</a>
+      </div>
+    </article>
+    
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const input = document.getElementById('newsSearch');
+      const cards = Array.from(document.querySelectorAll('.news-card'));
+      if (!input) return;
+
+      input.addEventListener('input', () => {
+        const q = input.value.trim().toLowerCase();
+        cards.forEach((card) => {
+          const text = card.innerText.toLowerCase();
+          card.classList.toggle('hidden', q && !text.includes(q));
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
