@@ -14,6 +14,12 @@
       --tab-active:#111827;
       --tab-active-text:#ffffff;
       --radius:12px;
+      --primary:#1d4ed8;
+      --primary-soft:#dbeafe;
+      --success:#166534;
+      --success-soft:#dcfce7;
+      --danger:#b91c1c;
+      --danger-soft:#fee2e2;
     }
 
     body {
@@ -39,13 +45,11 @@
 
     .wrap { padding: 14px 20px 20px; }
 
-    /* Tabs */
     .tabs {
       display:flex;
       flex-wrap: wrap;
       gap:8px;
       margin-bottom:12px;
-      display: flex;
       justify-content: center;
     }
 
@@ -68,13 +72,11 @@
     .panel { display:none; }
     .panel.active { display:block; }
 
-    /* Nested tabs inside Legacy Drives page */
     .subtabs {
       display:flex;
       flex-wrap: wrap;
       gap:8px;
       margin: 10px 0 12px;
-      display: flex;
       justify-content: center;
     }
 
@@ -94,7 +96,6 @@
       border-color:var(--tab-active);
     }
 
-    /* Text blocks where you can write descriptions */
     .card {
       border:1px solid var(--border);
       border-radius: var(--radius);
@@ -181,6 +182,172 @@
       line-height: 1.45;
     }
 
+    .agent-grid {
+      display:grid;
+      grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .form-grid {
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field {
+      display:flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .field small {
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:10px 12px;
+      font: inherit;
+      color: var(--text);
+      background:#fff;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .agent-actions {
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .btn {
+      border:1px solid var(--border);
+      background:#fff;
+      padding:10px 14px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:700;
+      color:var(--text);
+    }
+
+    .btn.primary {
+      background: var(--primary);
+      color:#fff;
+      border-color: var(--primary);
+    }
+
+    .btn.secondary {
+      background: var(--tab-bg);
+    }
+
+    .btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .status-box,
+    .preview-box {
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background:#fff;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .status-pill {
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:13px;
+      font-weight:700;
+      background: var(--tab-bg);
+    }
+
+    .status-pill.idle { background: var(--tab-bg); color: var(--text); }
+    .status-pill.running { background: var(--primary-soft); color: var(--primary); }
+    .status-pill.success { background: var(--success-soft); color: var(--success); }
+    .status-pill.error { background: var(--danger-soft); color: var(--danger); }
+
+    .status-meta {
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .status-meta div {
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:10px;
+      background:#fafafa;
+    }
+
+    .status-meta strong,
+    .preview-box strong {
+      display:block;
+      font-size:12px;
+      text-transform:uppercase;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+
+    .preview-list {
+      margin: 8px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .helper-text {
+      margin-top: 10px;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    pre.code-block {
+      margin: 10px 0 0;
+      padding: 12px;
+      border-radius: 10px;
+      overflow:auto;
+      background:#0f172a;
+      color:#e5e7eb;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 900px) {
+      .agent-grid,
+      .form-grid,
+      .status-meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 520px) {
       h1 { font-size: 32px; }
 
@@ -203,10 +370,12 @@
   </header>
 
   <div class="wrap">
-    <!-- Top-level tabs -->
     <div class="tabs" role="tablist" aria-label="Site Sections">
       <button class="tabbtn" role="tab" id="tab-home" aria-controls="panel-home" aria-selected="true">
         Home
+      </button>
+      <button class="tabbtn" role="tab" id="tab-agent-control" aria-controls="panel-agent-control" aria-selected="false">
+        Agent Control
       </button>
       <button class="tabbtn" role="tab" id="tab-legacy-drives" aria-controls="panel-legacy-drives" aria-selected="false">
         Legacy Drives
@@ -216,7 +385,6 @@
       </button>
     </div>
 
-    <!-- HOME -->
     <section id="panel-home" class="panel active" role="tabpanel" aria-labelledby="tab-home">
       <div class="card">
         <h2>About</h2>
@@ -226,9 +394,130 @@
       </div>
     </section>
 
-    <!-- LEGACY DRIVES -->
+    <section id="panel-agent-control" class="panel" role="tabpanel" aria-labelledby="tab-agent-control">
+      <div class="card">
+        <h2>Ammonia News Agent</h2>
+        <p>
+          Use this control panel to update the agent instructions, keyword filters, date window, and run settings before launching the ammonia news workflow.
+        </p>
+      </div>
+
+      <div class="agent-grid">
+        <div>
+          <div class="card">
+            <h2>Control Panel</h2>
+            <div class="form-grid">
+              <div class="field full">
+                <label for="agent-instructions">Agent Instructions</label>
+                <textarea id="agent-instructions" placeholder="Tell the agent what useful ammonia news means to you.">Find the most useful and recent news articles on industrial use of ammonia. Prioritize practical industrial applications, pilots, deployments, infrastructure, shipping fuel, turbines, combustion, cracking, storage, and power generation. Avoid fertilizer-only coverage, opinion-only pieces, duplicate rewrites, and low-value investor summaries.</textarea>
+                <small>This text should become the instruction block your backend sends with each run.</small>
+              </div>
+
+              <div class="field full">
+                <label for="agent-keywords">Primary Keywords</label>
+                <textarea id="agent-keywords" placeholder="industrial ammonia, ammonia fuel, ammonia turbines">industrial ammonia, ammonia fuel, ammonia cracking, ammonia combustion, ammonia shipping, ammonia power generation, ammonia turbines</textarea>
+                <small>Comma-separated keywords that help gather and rank candidate articles.</small>
+              </div>
+
+              <div class="field full">
+                <label for="agent-exclude-keywords">Exclude Keywords</label>
+                <textarea id="agent-exclude-keywords" placeholder="fertilizer prices, earnings, agriculture only">fertilizer prices, agriculture only, stock price, investor update, opinion</textarea>
+                <small>Comma-separated phrases that should reduce or reject an article.</small>
+              </div>
+
+              <div class="field">
+                <label for="agent-date-mode">Date Mode</label>
+                <select id="agent-date-mode">
+                  <option value="relative" selected>Recent Window</option>
+                  <option value="absolute">Custom Date Range</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="agent-lookback-days">Lookback Days</label>
+                <input id="agent-lookback-days" type="number" min="1" max="365" value="30" />
+              </div>
+
+              <div class="field">
+                <label for="agent-start-date">Start Date</label>
+                <input id="agent-start-date" type="date" />
+              </div>
+
+              <div class="field">
+                <label for="agent-end-date">End Date</label>
+                <input id="agent-end-date" type="date" />
+              </div>
+
+              <div class="field">
+                <label for="agent-max-candidates">Max Candidate Articles</label>
+                <input id="agent-max-candidates" type="number" min="10" max="1000" value="200" />
+              </div>
+
+              <div class="field">
+                <label for="agent-max-results">Max Final Results</label>
+                <input id="agent-max-results" type="number" min="1" max="100" value="15" />
+              </div>
+            </div>
+
+            <div class="agent-actions">
+              <button id="agent-save-btn" class="btn secondary" type="button">Save Settings</button>
+              <button id="agent-preview-btn" class="btn secondary" type="button">Preview Payload</button>
+              <button id="agent-run-btn" class="btn primary" type="button">RUN</button>
+            </div>
+
+            <p class="helper-text">
+              Right now these controls work on the front end and are ready to connect to your backend route later, such as <code>/api/run-ammonia-research-agent</code>.
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <div class="status-box">
+            <h2>Run Status</h2>
+            <div id="agent-status-pill" class="status-pill idle">Idle</div>
+            <div class="status-meta">
+              <div>
+                <strong>Last Run</strong>
+                <span id="agent-last-run">Not run yet</span>
+              </div>
+              <div>
+                <strong>Last Save</strong>
+                <span id="agent-last-save">Not saved yet</span>
+              </div>
+              <div>
+                <strong>Result</strong>
+                <span id="agent-last-result">No run output yet</span>
+              </div>
+              <div>
+                <strong>Endpoint</strong>
+                <span id="agent-endpoint">/api/run-ammonia-research-agent</span>
+              </div>
+            </div>
+            <p id="agent-status-message" class="helper-text">
+              This tab is ready to collect your agent settings and send them to your backend once that endpoint exists.
+            </p>
+          </div>
+
+          <div class="preview-box">
+            <h2>Current Settings Snapshot</h2>
+            <strong>Keywords</strong>
+            <ul id="agent-keyword-preview" class="preview-list"></ul>
+            <strong>Excluded Terms</strong>
+            <ul id="agent-exclude-preview" class="preview-list"></ul>
+            <strong>Date Filter</strong>
+            <div id="agent-date-preview" class="helper-text">Last 30 days</div>
+          </div>
+
+          <div class="preview-box">
+            <h2>JSON Payload Preview</h2>
+            <p class="helper-text">This is the object your backend can receive when you click RUN.</p>
+            <pre id="agent-payload-preview" class="code-block">{}</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="panel-legacy-drives" class="panel" role="tabpanel" aria-labelledby="tab-legacy-drives">
-      <!-- Nested tabs -->
       <div class="subtabs" role="tablist" aria-label="Legacy Drives Seasons">
         <button class="subtabbtn" role="tab" id="subtab-LD-recent" aria-controls="subpanel-LD-recent" aria-selected="true">
           Recent
@@ -253,7 +542,6 @@
       </section>
     </section>
 
-    <!-- AMMONIA NEWS -->
     <section id="panel-ammonia-news" class="panel" role="tabpanel" aria-labelledby="tab-ammonia-news">
       <iframe 
         class="frame" 
@@ -264,14 +552,13 @@
   </div>
 
   <script>
-    // Main Tabs
     const mainTabs = [
       { btn: document.getElementById('tab-home'), panel: document.getElementById('panel-home') },
+      { btn: document.getElementById('tab-agent-control'), panel: document.getElementById('panel-agent-control') },
       { btn: document.getElementById('tab-legacy-drives'), panel: document.getElementById('panel-legacy-drives') },
       { btn: document.getElementById('tab-ammonia-news'), panel: document.getElementById('panel-ammonia-news') },
     ];
 
-    // Nested tabs inside Legacy Drives
     const legacyTabs = [
       { btn: document.getElementById('subtab-LD-recent'), panel: document.getElementById('subpanel-LD-recent') },
       { btn: document.getElementById('subtab-LD-regular'), panel: document.getElementById('subpanel-LD-regular') },
@@ -289,17 +576,182 @@
     mainTabs[0].btn.addEventListener('click', () => activate(mainTabs, 0));
     mainTabs[1].btn.addEventListener('click', () => activate(mainTabs, 1));
     mainTabs[2].btn.addEventListener('click', () => activate(mainTabs, 2));
+    mainTabs[3].btn.addEventListener('click', () => activate(mainTabs, 3));
     legacyTabs[0].btn.addEventListener('click', () => activate(legacyTabs, 0));
     legacyTabs[1].btn.addEventListener('click', () => activate(legacyTabs, 1));
     legacyTabs[2].btn.addEventListener('click', () => activate(legacyTabs, 2));
 
+    const agentStorageKey = 'ammoniaAgentControlSettings';
+
+    const agentEls = {
+      instructions: document.getElementById('agent-instructions'),
+      keywords: document.getElementById('agent-keywords'),
+      excludeKeywords: document.getElementById('agent-exclude-keywords'),
+      dateMode: document.getElementById('agent-date-mode'),
+      lookbackDays: document.getElementById('agent-lookback-days'),
+      startDate: document.getElementById('agent-start-date'),
+      endDate: document.getElementById('agent-end-date'),
+      maxCandidates: document.getElementById('agent-max-candidates'),
+      maxResults: document.getElementById('agent-max-results'),
+      runBtn: document.getElementById('agent-run-btn'),
+      saveBtn: document.getElementById('agent-save-btn'),
+      previewBtn: document.getElementById('agent-preview-btn'),
+      statusPill: document.getElementById('agent-status-pill'),
+      statusMessage: document.getElementById('agent-status-message'),
+      lastRun: document.getElementById('agent-last-run'),
+      lastSave: document.getElementById('agent-last-save'),
+      lastResult: document.getElementById('agent-last-result'),
+      keywordPreview: document.getElementById('agent-keyword-preview'),
+      excludePreview: document.getElementById('agent-exclude-preview'),
+      datePreview: document.getElementById('agent-date-preview'),
+      payloadPreview: document.getElementById('agent-payload-preview')
+    };
+
+    function toList(value) {
+      return value
+        .split(',')
+        .map(item => item.trim())
+        .filter(Boolean);
+    }
+
+    function getAgentSettings() {
+      return {
+        instructions: agentEls.instructions.value.trim(),
+        keywords: toList(agentEls.keywords.value),
+        exclude_keywords: toList(agentEls.excludeKeywords.value),
+        date_mode: agentEls.dateMode.value,
+        lookback_days: Number(agentEls.lookbackDays.value || 0),
+        start_date: agentEls.startDate.value || null,
+        end_date: agentEls.endDate.value || null,
+        max_candidates: Number(agentEls.maxCandidates.value || 0),
+        max_results: Number(agentEls.maxResults.value || 0),
+        requested_at: new Date().toISOString()
+      };
+    }
+
+    function setStatus(state, message) {
+      agentEls.statusPill.className = 'status-pill ' + state;
+      agentEls.statusPill.textContent = state.charAt(0).toUpperCase() + state.slice(1);
+      agentEls.statusMessage.textContent = message;
+    }
+
+    function formatTimestamp(isoString) {
+      return new Date(isoString).toLocaleString();
+    }
+
+    function updateListPreview(element, items, emptyText) {
+      element.innerHTML = '';
+      if (!items.length) {
+        const li = document.createElement('li');
+        li.textContent = emptyText;
+        element.appendChild(li);
+        return;
+      }
+      items.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        element.appendChild(li);
+      });
+    }
+
+    function updateDateInputState() {
+      const relativeMode = agentEls.dateMode.value === 'relative';
+      agentEls.lookbackDays.disabled = !relativeMode;
+      agentEls.startDate.disabled = relativeMode;
+      agentEls.endDate.disabled = relativeMode;
+    }
+
+    function refreshAgentPreview() {
+      const settings = getAgentSettings();
+      updateListPreview(agentEls.keywordPreview, settings.keywords, 'No keywords set');
+      updateListPreview(agentEls.excludePreview, settings.exclude_keywords, 'No exclusions set');
+
+      agentEls.datePreview.textContent = settings.date_mode === 'relative'
+        ? `Last ${settings.lookback_days} days`
+        : `${settings.start_date || 'No start date'} to ${settings.end_date || 'No end date'}`;
+
+      agentEls.payloadPreview.textContent = JSON.stringify(settings, null, 2);
+    }
+
+    function saveAgentSettings() {
+      const settings = getAgentSettings();
+      localStorage.setItem(agentStorageKey, JSON.stringify(settings));
+      agentEls.lastSave.textContent = formatTimestamp(settings.requested_at);
+      setStatus('success', 'Settings saved locally in the browser. Next step is wiring this to your backend settings endpoint.');
+      refreshAgentPreview();
+    }
+
+    function loadAgentSettings() {
+      const raw = localStorage.getItem(agentStorageKey);
+      if (!raw) {
+        updateDateInputState();
+        refreshAgentPreview();
+        return;
+      }
+
+      try {
+        const settings = JSON.parse(raw);
+        agentEls.instructions.value = settings.instructions || '';
+        agentEls.keywords.value = (settings.keywords || []).join(', ');
+        agentEls.excludeKeywords.value = (settings.exclude_keywords || []).join(', ');
+        agentEls.dateMode.value = settings.date_mode || 'relative';
+        agentEls.lookbackDays.value = settings.lookback_days || 30;
+        agentEls.startDate.value = settings.start_date || '';
+        agentEls.endDate.value = settings.end_date || '';
+        agentEls.maxCandidates.value = settings.max_candidates || 200;
+        agentEls.maxResults.value = settings.max_results || 15;
+        agentEls.lastSave.textContent = 'Loaded from browser storage';
+      } catch (error) {
+        console.error('Failed to load agent settings:', error);
+      }
+
+      updateDateInputState();
+      refreshAgentPreview();
+    }
+
+    async function runAmmoniaAgent() {
+      const payload = getAgentSettings();
+      console.log('Run payload:', payload);
+      refreshAgentPreview();
+      agentEls.runBtn.disabled = true;
+      setStatus('running', 'Preparing payload and attempting to send it to the ammonia agent backend.');
+      agentEls.lastRun.textContent = formatTimestamp(payload.requested_at);
+      agentEls.lastResult.textContent = 'Run started';
+
+      try {
+        const response = await fetch('/api/run-ammonia-research-agent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
+
+        const result = await response.json();
+        setStatus('success', 'Agent run request completed successfully.');
+        agentEls.lastResult.textContent = result.message || 'Run completed';
+      } catch (error) {
+        console.error('Agent run failed:', error);
+        setStatus('error', 'Backend endpoint not connected yet, but the payload is ready. Wire /api/run-ammonia-research-agent next.');
+        agentEls.lastResult.textContent = error.message;
+      } finally {
+        agentEls.runBtn.disabled = false;
+      }
+    }
+
     function applyHash() {
       const h = (location.hash || '').toLowerCase();
 
-      if (h === '#legacy' || h === '#legacy-regular' || h === '#legacy-post') {
+      if (h === '#agent-control') {
         activate(mainTabs, 1);
-      } else if (h === '#ammonia-news') {
+      } else if (h === '#legacy' || h === '#legacy-regular' || h === '#legacy-post') {
         activate(mainTabs, 2);
+      } else if (h === '#ammonia-news') {
+        activate(mainTabs, 3);
       } else {
         activate(mainTabs, 0);
       }
@@ -309,7 +761,33 @@
       else activate(legacyTabs, 0);
     }
 
+    [
+      agentEls.instructions,
+      agentEls.keywords,
+      agentEls.excludeKeywords,
+      agentEls.dateMode,
+      agentEls.lookbackDays,
+      agentEls.startDate,
+      agentEls.endDate,
+      agentEls.maxCandidates,
+      agentEls.maxResults
+    ].forEach(el => {
+      el.addEventListener('input', () => {
+        updateDateInputState();
+        refreshAgentPreview();
+      });
+      el.addEventListener('change', () => {
+        updateDateInputState();
+        refreshAgentPreview();
+      });
+    });
+
+    agentEls.saveBtn.addEventListener('click', saveAgentSettings);
+    agentEls.previewBtn.addEventListener('click', refreshAgentPreview);
+    agentEls.runBtn.addEventListener('click', runAmmoniaAgent);
+
     window.addEventListener('hashchange', applyHash);
+    loadAgentSettings();
     applyHash();
   </script>
 </body>
