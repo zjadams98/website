@@ -25,7 +25,7 @@ jobs:
           pip install feedparser
 
       - name: Run ammonia script
-        run: python ammonia-research/ammonia_finder.py
+        run: python ammonia-research/ammonia_research.py
 
       - name: Commit and push output
         run: |
