@@ -97,7 +97,7 @@
       <div style="font-size:12px; font-weight:bold;">Regular Season Legacy Drives</div>
       <div style="font-size:11px;">Seasons: 2000-2025</div>
     </div>
-    <div class="timestamp">Generated: 2026-04-19 13:00</div>
+    <div class="timestamp">Generated: 2026-04-20 14:13</div>
   </div>
 
       <h1>Regular Season Legacy Drives</h1>
@@ -779,13 +779,11 @@
         const detailsEl = document.getElementById(detailsId);
         if (!detailsEl) return;
 
-        // Toggle
         if (detailsEl.style.display === "block") {
           detailsEl.style.display = "none";
           return;
         }
 
-        // Close others
         hideAllDetails();
         detailsEl.style.display = "block";
 
@@ -889,7 +887,6 @@
       });
     });
 
-    // Default: show all
     showAll();
   })();
   </script>
