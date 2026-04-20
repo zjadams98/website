@@ -4,7 +4,10 @@ from email.utils import parsedate_to_datetime
 
 import feedparser
 
-OUTPUT_FILE = r"C:\Users\zjada\OneDrive\Desktop\Coding\new_ammonia_links.txt"
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+OUTPUT_FILE = BASE_DIR / "new_ammonia_links.txt"
 
 FEEDS = [
     "https://news.google.com/rss/search?q=ammonia",
